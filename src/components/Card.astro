@@ -1,61 +1,106 @@
 ---
+import VideoPreviewCard from "./VideoPreviewCard";
+
+export const prerender = false;
 interface Props {
-	title: string;
-	body: string;
-	href: string;
+  title: string;
+  body: string;
+  href: string;
+  thumbnailUrl?: string;
+  previewUrl?: string;
 }
 
-const { href, title, body } = Astro.props;
+const { href, title, body, thumbnailUrl, previewUrl } = Astro.props;
 ---
 
 <li class="link-card">
-	<a href={href}>
-		<h2>
-			{title}
-			<span>&rarr;</span>
-		</h2>
-		<p>
-			{body}
-		</p>
-	</a>
+	<!-- <a href={`/videos/${href.slice(8)}`}> -->
+		<a href={`/videos/${title}`}>
+
+    <!-- Server-side rendering of title, body, and image for SEO -->
+    <h2 title={title}>
+      {title}
+      <span>&rarr;</span>
+    </h2>
+    <!-- <p title={body}>
+      {body}
+    </p> -->
+
+    <!-- React handles the hover functionality for video preview -->
+    <div class="media-container">
+      <!-- Initial image rendered server-side -->
+      <img class="thumbnail" src={thumbnailUrl ?? ""} alt={title} style="" />
+
+      <!-- React hover functionality for video -->
+      <VideoPreviewCard previewUrl={previewUrl} client:load />
+    </div>
+  </a>
 </li>
+
 <style>
-	.link-card {
-		list-style: none;
-		display: flex;
-		padding: 1px;
-		background-color: #23262d;
-		background-image: none;
-		background-size: 400%;
-		border-radius: 7px;
-		background-position: 100%;
-		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-	}
-	.link-card > a {
-		width: 100%;
-		text-decoration: none;
-		line-height: 1.4;
-		padding: calc(1.5rem - 1px);
-		border-radius: 8px;
-		color: white;
-		background-color: #23262d;
-		opacity: 0.8;
-	}
-	h2 {
-		margin: 0;
-		font-size: 1.25rem;
-		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-	}
-	p {
-		margin-top: 0.5rem;
-		margin-bottom: 0;
-	}
-	.link-card:is(:hover, :focus-within) {
-		background-position: 0;
-		background-image: var(--accent-gradient);
-	}
-	.link-card:is(:hover, :focus-within) h2 {
-		color: rgb(var(--accent-light));
-	}
+  .link-card {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 1px;
+    background-color: #23262d;
+    background-size: 400%;
+    border-radius: 7px;
+    background-position: 100%;
+    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .link-card > a {
+    width: 100%;
+    text-decoration: none;
+    line-height: 1.4;
+    padding: 1rem;/* calc(1.5rem - 1px) */;
+    border-radius: 8px;
+    color: white;
+    background-color: #23262d;
+    opacity: 0.8;
+  }
+  .link-card > a:hover {
+    opacity: 1;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	margin-bottom: 0.8rem;
+  }
+
+  p {
+    /* margin-top: 0.25rem; */
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .media-container {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .thumbnail {
+    width: 100%;
+    aspect-ratio: 4/3;
+    position: absolute;
+    border-radius: 8px;
+  }
+
+  .link-card:is(:hover, :focus-within) {
+    background-position: 0;
+    background-image: var(--accent-gradient);
+  }
+
+  .link-card:is(:hover, :focus-within) h2 {
+    color: rgb(var(--accent-light));
+  }
 </style>

@@ -1,6 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import CardTest from '../components/CardTest.astro';
+
+ export const prerender = false;
+type VideoAndThumbnailUrlType = {
+    videoKey: string,
+    videoUrl: string,
+    thumbnailUrl: string,
+    previewUrl: string
+};
+
+type VideosAndThumbnailUrlsType = VideoAndThumbnailUrlType[] | undefined;
+
+const videosAndThumbnailUrls:VideosAndThumbnailUrlsType = await fetch('https://0wy4drz3l6.execute-api.us-west-1.amazonaws.com/prod/%7Bvideos+%7D')
+	.then((res) => res.json())
+	.then((data) => data)
+	.catch((err) => console.error(err));
+
+	const videosAndThumbnailUrlsProcesed = videosAndThumbnailUrls?.map(item=>(
+		{
+			...item,
+			videoKey:item?.videoKey?.slice(11)
+	    }
+		)) ?? [];
+
 ---
 
 <Layout title="Welcome to Astro.">
@@ -39,6 +63,21 @@ import Card from '../components/Card.astro';
 			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
 		</p>
 		<ul role="list" class="link-card-grid">
+			{videosAndThumbnailUrlsProcesed.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
+				<div>
+				<Card
+					href={videoUrl}
+					title={videoKey}
+					body="Watch the video"
+					thumbnailUrl={thumbnailUrl}
+					previewUrl={previewUrl}
+				/>
+				{/* <CardTest title={videoKey} body="Watch the video"/> */}
+			</div>
+			))}
+		</ul>
+
+		<!-- <ul role="list" class="link-card-grid">
 			<Card
 				href="https://docs.astro.build/"
 				title="Documentation"
@@ -59,7 +98,7 @@ import Card from '../components/Card.astro';
 				title="Community"
 				body="Come say hi to our amazing Discord community. ❤️"
 			/>
-		</ul>
+		</ul> -->
 	</main>
 </Layout>
 
@@ -67,8 +106,8 @@ import Card from '../components/Card.astro';
 	main {
 		margin: auto;
 		padding: 1rem;
-		width: 800px;
-		max-width: calc(100% - 2rem);
+		/* width: 800px; */
+		max-width: calc(100% - 400px);
 		color: white;
 		font-size: 20px;
 		line-height: 1.6;
@@ -116,8 +155,9 @@ import Card from '../components/Card.astro';
 	}
 	.link-card-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(28ch, 1fr));
 		gap: 2rem;
 		padding: 0;
 	}
+	
 </style>

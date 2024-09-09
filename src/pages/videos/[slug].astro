@@ -1,0 +1,87 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = false; // Enable SSR if needed
+
+// Access the slug from the URL dynamically using Astro.params
+const { slug } = Astro.params;
+
+// Map the slug to the external CloudFront URL
+const videoUrl = `https://d1a9sy9txb1eh6.cloudfront.net/MainVideos/${slug}`;
+
+// Example video data (replace with actual logic for fetching video data)
+const videoData = {
+  title: `${slug}` /* Video Title:  */,
+  description: `` /* This is the description for the video: ${slug} */,
+  videoUrl,
+};
+---
+
+<Layout title={videoData.title}>
+  <article class="main-video-container">
+    <!-- Main Video Display -->
+    <div class="video-wrapper">
+      <!-- style="width: 100%; aspect-ratio: 16/9;" -->
+      <video
+        class="main-video"
+        controls
+        preload="auto"
+        src={videoData.videoUrl}
+        style="height: 100%; aspect-ratio: 16/9;"></video>
+    </div>
+
+    <!-- Video Details -->
+    <div class="video-info">
+      <h2>{videoData.title}</h2>
+      <p>{videoData.description}</p>
+    </div>
+  </article>
+</Layout>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .main-video-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #23262d;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    /* max-width: 900px; */
+    /* max-width: calc(100% - 400px); */
+    margin: auto;
+    max-height: 100%;
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .main-video {
+    width: 100%;
+    border-radius: 8px;
+    background-color: #171313;
+  }
+
+  .video-info {
+    padding: 20px 0;
+  }
+
+  h2 {
+    font-size: 2rem;
+    color: white;
+    margin: 0 0 10px 0;
+  }
+
+  p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+</style>
