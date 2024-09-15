@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false; // Enable SSR if needed
 
+
 // Access the slug from the URL dynamically using Astro.params
 const { slug } = Astro.params;
 
@@ -16,10 +17,10 @@ const videoData = {
   description: `` /* This is the description for the video: ${slug} */,
   videoUrl,
 };
+
 ---
 
 <Layout title={videoData.title}>
-  <SearchBar  client:only/>
   <article class="main-video-container">
     <!-- Main Video Display -->
     <div class="video-wrapper">
@@ -76,7 +77,7 @@ const videoData = {
   }
 
   h2 {
-    font-size: 2rem;
+    font-size: 1.25rem;
     color: white;
     margin: 0 0 10px 0;
   }

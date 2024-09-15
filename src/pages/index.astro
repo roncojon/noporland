@@ -1,14 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import type { Tag, VideoAndThumbnailUrlType } from '../env';
+import SearchBar from '../components/SearchBar';
 
  export const prerender = false;
-type VideoAndThumbnailUrlType = {
-    videoKey: string,
-    videoUrl: string,
-    thumbnailUrl: string,
-    previewUrl: string
-};
 
 type VideosAndThumbnailUrlsType = VideoAndThumbnailUrlType[] | undefined;
 
@@ -24,6 +20,16 @@ const videosAndThumbnailUrls:VideosAndThumbnailUrlsType = await fetch('https://0
 	    }
 		)) ?? [];
 
+		const availableTags = [
+    { id: 1, name: 'Work' },
+    { id: 2, name: 'Personal' },
+    { id: 3, name: 'Important' },
+  ];
+
+  const handleSearch = (searchTerm: string, selectedTags: Tag[]) => {
+    console.log('Search Term:', searchTerm);
+    console.log('Selected Tags:', selectedTags);
+  };
 ---
 
 <Layout title="Welcome to Astro.">
@@ -61,6 +67,7 @@ const videosAndThumbnailUrls:VideosAndThumbnailUrlsType = await fetch('https://0
 			To get started, open the directory <code>src/pages</code> in your project.<br />
 			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
 		</p>
+		<SearchBar tags={availableTags} onSearch={handleSearch} client:only/>
 		<ul role="list" class="link-card-grid">
 			{videosAndThumbnailUrlsProcesed.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
 				<div>
@@ -71,33 +78,10 @@ const videosAndThumbnailUrls:VideosAndThumbnailUrlsType = await fetch('https://0
 					thumbnailUrl={thumbnailUrl}
 					previewUrl={previewUrl}
 				/>
-				{/* <CardTest title={videoKey} body="Watch the video"/> */}
 			</div>
 			))}
 		</ul>
-
-		<!-- <ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
-		</ul> -->
+	
 	</main>
 </Layout>
 
