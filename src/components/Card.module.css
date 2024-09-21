@@ -18,3 +18,98 @@
 
 /* background-color: rgba(246, 196, 255, 0.5);  */
 /* Semi-transparent background */
+
+.linkCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 0.5fr));
+  gap: 0.5rem;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .linkCardGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+  .linkCard {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 1px;
+    /* background-color: #23262d; */
+    background-size: 400%;
+    border-radius: 7px;
+    background-position: 100%;
+    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    /* box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); */
+  }
+
+  .linkCard > a {
+    width: 100%;
+    text-decoration: none;
+    line-height: 1.4;
+    /* padding: 1rem; */
+    /* calc(1.5rem - 1px) */;
+    border-radius: 8px;
+    color: white;
+    /* background-color: #23262d; */
+    opacity: 0.8;
+  }
+  .linkCard > a:hover {
+    opacity: 1;
+  }
+  h2 {
+    margin: 0.2rem;
+    font-size: 1.25rem;
+    transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Adjust the number of lines to display */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3.6rem;
+    word-break: break-word; /* Force long words to break */
+    overflow-wrap: break-word; /* Ensure the word breaks and ellipsis is shown */
+}
+
+/* In your Card.module.css file */
+
+/* p {
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
+
+:global(#no-data-content) > p {
+  margin-bottom: initial;
+  white-space: initial;
+  overflow: initial;
+  text-overflow: initial;
+}
+
+
+  .mediaContainer {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .thumbnail {
+    width: 100%;
+    aspect-ratio: 4/3;
+    position: absolute;
+    border-radius: 8px;
+  }
+
+  .linkCard:is(:hover, :focus-within) {
+    background-position: 0;
+    background-image: var(--accent-gradient);
+  }
+
+  .linkCard:is(:hover, :focus-within) h2 {
+    color: rgb(var(--accent-light));
+  }
+  
+  
