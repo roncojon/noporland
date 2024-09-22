@@ -1,5 +1,5 @@
 let continuationToken = null;  // For tracking pagination
-const itemsByPage = 3;
+const itemsByPage = 4;
 let hasMoreVideos = true;
 const videoListElement = document.getElementById('video-list');
 const loadMoreButton = document.getElementById('load-more-btn');

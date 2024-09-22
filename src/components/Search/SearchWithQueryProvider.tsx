@@ -6,12 +6,10 @@ import SearchBar from './SearchBar';
 // Create a query client
 const queryClient = new QueryClient();
 
-const SearchWithQueryProvider = ({ tags }) => {
+const SearchWithQueryProvider = (/* { tags } */) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <SearchBar tags={tags} onSearch={function (searchTerm: string, selectedTags: string[]): void {
-              throw new Error('Function not implemented.');
-          } } />
+      <SearchBar /* tags={tags} */ />
      </QueryClientProvider>
   );
 };
