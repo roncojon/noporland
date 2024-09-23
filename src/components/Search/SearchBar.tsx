@@ -5,19 +5,23 @@ import styles from '../Card.module.css';
 import Loader from './Loader';
 import { CloseIcon } from './CloseIcon';
 import NoDataFound from './NoData';
-import { fetchVideosData } from '../../services/awsServices';
+import { fetchVideosData, type FetchVideosDataType } from '../../services/awsServices';
+import type { VideoAndThumbnailUrlType } from '../../env';
 
 const elementsPerPage = 3;
 
-const SearchBar: React.FC = () => {
+const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // Current search term
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // Current selected tags
   // const [currentPage, setCurrentPage] = useState(1); // Track the current page number
   const [searchState, setSearchState] = useState({
     savedSearchTerm: '',
     savedSelectedTags: [] as string[],
-    currentPage:1
+    currentPage: 1
   });
+  const [videos, setVideos] = useState<VideoAndThumbnailUrlType[]|undefined>(initialVideos?.videoFiles || []);
+  const [isLoading, setIsLoading] = useState(false);
+
   // const [totalPages, setTotalPages] = useState<number>(1); // Track the total pages returned by the backend
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false); // Dropdown visibility
   const searchInputRef = useRef<HTMLInputElement>(null); // Ref for the search input
@@ -40,7 +44,7 @@ const SearchBar: React.FC = () => {
     searchInputRef.current?.blur(); // Remove focus from the search bar after clearing
   };
 
-  
+
   // Toggle tag selection
   const toggleTagSelection = (tag: string, e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation(); // Prevent click from bubbling up to the click outside handler
@@ -107,20 +111,38 @@ const SearchBar: React.FC = () => {
     setIsDropdownOpen(true); // Open dropdown
   };
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading:isLoadingQuery, isError, refetch } = useQuery({
     queryKey: ['videos', searchState], // Unique query key based on searchState and currentPage
     queryFn: async () => {
-      const result = await fetchVideosData({
-        elementsPerPage,
-        searchText: searchState.savedSearchTerm,
-        searchTags: searchState.savedSelectedTags,
-        page: searchState.currentPage , // Pass the continuation token to the query
-      });
-      return result;
+      console.log('triggered')
+      if (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) {
+        const result = await fetchVideosData({
+          elementsPerPage,
+          searchText: searchState.savedSearchTerm,
+          searchTags: searchState.savedSelectedTags,
+          page: searchState.currentPage, // Pass the continuation token to the query
+        });
+        return result;
+      }
+      else return initialVideos;
     },
     // keepPreviousData: true, // Keep previous data while fetching new data
+    // enabled: searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1, // Only fetch if there are filters or user paginates
+
     staleTime: 600000, // Cache results for 10 minutes
   });
+console.log('dataaa',data)
+console.log('videoooos',videos)
+  useEffect(() => {
+    // if(searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1)
+    if (!isLoadingQuery && data){
+      setIsLoading(false);
+      setVideos(data?.videoFiles);
+    }
+    else if(isLoadingQuery) {
+      setIsLoading(true);
+    }
+  }, [data,isLoadingQuery])
 
   // const videos = data?.videoFiles || [];
 
@@ -144,7 +166,7 @@ const SearchBar: React.FC = () => {
   return (
     <>
       <div
-        className={`search-bar-container w-full mt-4 relative ${isLoading ? 'opacity-50 pointer-events-none' : ''
+        className={`search-bar-container w-full h-full mt-4 relative ${isLoading ? 'opacity-50 pointer-events-none' : ''
           }`}
       >
         {/* Search Input */}
@@ -160,7 +182,7 @@ const SearchBar: React.FC = () => {
             onFocus={handleFocus}
             placeholder="Search..."
           />
-       
+
           {/* Search Button inside the input */}
           {(searchTerm.length === 0 && selectedTags.length === 0) ||
             (searchTerm !== searchState.savedSearchTerm ||
@@ -168,8 +190,8 @@ const SearchBar: React.FC = () => {
             ? (
               <button
                 className={`absolute right-3 top-2 w-8 h-8 p-1 rounded-full flex items-center justify-center transition-colors ${(searchTerm.length > 0 || selectedTags.length > 0)
-                    ? 'animate-ripple-effect bg-transparent'
-                    : 'text-gray-400 hover:text-gray-600'
+                  ? 'animate-ripple-effect bg-transparent'
+                  : 'text-gray-400 hover:text-gray-600'
                   } ${(searchTerm.length > 0 || selectedTags.length > 0)
                     ? 'hover:animate-ripple-effect-hover focus:animate-ripple-effect-hover' // Darker ripple on hover/focus
                     : ''
@@ -243,11 +265,11 @@ const SearchBar: React.FC = () => {
         </div>
       </div>
 
-      <div id="linkCardGrid-container" className="w-full h-full relative box-content">
-        {isLoading && <Loader />}
-        {data?.videoFiles?.length > 0 ? (
+      <div /* id="linkCardGrid-container" */ className="w-full h-full !relative min-h-[300px]">
+        {isLoading && (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) && <Loader />}
+        {videos?.length > 0/*  && !isLoading  */? (
           <ul role="list" className={styles.linkCardGrid}>
-            {data?.videoFiles?.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
+            {videos?.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
               <CardReact
                 key={videoKey}
                 href={videoUrl}
@@ -259,7 +281,7 @@ const SearchBar: React.FC = () => {
             ))}
           </ul>
         ) : (
-          !isLoading && <NoDataFound />
+          !isLoading && videos !== undefined && <NoDataFound />
         )}
       </div>
 
@@ -274,10 +296,10 @@ const SearchBar: React.FC = () => {
           >
             «
           </button>
-          
+
           {/* Page Number */}
           <button className="join-item btn">Page {isLoading ? '...' : searchState.currentPage} {!isLoading && 'of'} {data?.totalPages}</button>
-          
+
           {/* Next Button */}
           <button
             className="join-item btn"

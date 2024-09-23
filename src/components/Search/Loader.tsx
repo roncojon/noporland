@@ -1,8 +1,8 @@
 import React from 'react';
-
+/* w-full h-full  */
 const Loader = () => {
   return (
-    <div className="w-full h-full  min-h-[300px] relative top-0 left-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-[250] rounded-lg">
+    <div className=" absolute top-0 left-0 right-0 bottom-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-[250] rounded-lg ">
       <div className="flex items-center justify-center">
         {/* DaisyUI Spinner Loader */}
         {/* <span className="loading loading-spinner loading-lg text-white"></span> */}

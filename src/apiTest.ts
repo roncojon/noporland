@@ -28,7 +28,6 @@ export const searchResponseQuery = (searchText: string, searchTags: string[]) =>
 
       // Filter logic based on search text and tags
       const filteredResults = result.filter((video) => {
-        console.log('videoooooo',video)
         // Check if the videoKey includes the search text (case-insensitive)
         const matchesText = searchText
           ? video.videoKey.slice(11).toLowerCase().includes(searchText.toLowerCase())

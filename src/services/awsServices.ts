@@ -1,24 +1,25 @@
 import type { VideoAndThumbnailUrlType } from "../env";
 
-type FetchVideosDataType = {
+type FetchVideosQueryParamsType = {
     elementsPerPage: number;
     searchText?: string;
     searchTags?: string[];
     page: number;  // Add page for user pagination
 };
 
-export const fetchVideosData = async ({
-    elementsPerPage,
-    searchText,
-    searchTags,
-    page,
-}: FetchVideosDataType):Promise<{
+export type FetchVideosDataType = {
     videoFiles: VideoAndThumbnailUrlType[];
     currentPage: any;
     totalPages: any;
     totalResults: any;
     tags:string[];
-}> => {
+};
+export const fetchVideosData = async ({
+    elementsPerPage,
+    searchText,
+    searchTags,
+    page,
+}: FetchVideosQueryParamsType):Promise<FetchVideosDataType> => {
     // Build the query string
     const queryParams = new URLSearchParams({
         elementsPerPage: String(elementsPerPage),
@@ -42,8 +43,6 @@ export const fetchVideosData = async ({
         console.error(err);
         return { videoFiles: [], currentPage: 1, totalPages: 1, totalResults: 0 }; // Return empty result in case of error
     });
-
-    console.log('response', response);
 
     // Return the video files, current page, total pages, and total results
     return {
