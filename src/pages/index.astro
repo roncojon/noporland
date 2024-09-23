@@ -1,27 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
-import type { VideoAndThumbnailUrlType } from '../env';
 import SearchWithQueryProvider from '../components/Search/SearchWithQueryProvider';
 import SiteIcon from '../components/SiteIcon.astro';
 
-// const itemsByPage = 3
-// const videosAndThumbnailUrlsProcesed: VideoAndThumbnailUrlType[] = await fetch(`https://0wy4drz3l6.execute-api.us-west-1.amazonaws.com/prod/%7Bvideos%7D?elementsPerPage=${itemsByPage}`)
-//     .then(res => res.json())
-//     .then(data => data.videoFiles?.map(item => ({
-//         ...item,
-//         videoKey: item?.videoKey?.slice(11)
-//     })))
-//     .catch(err => console.error(err)) ?? [];
-
-
-// const availableTags:string[] = videosAndThumbnailUrlsProcesed.flatMap(e=>e.tags);
-
-/* ["big ass", "maid", "shorts", "big ol tag to test", "another long tag gaaaaa"]; */ 
-
 ---
 
-<Layout title="Welcome to NoporLand.">
+<Layout title="Welcome to NoporLand">
 	<main>
 		<SiteIcon />
 		<h1>Welcome to <span class="text-gradient">NoporLand</span></h1>
@@ -29,26 +13,7 @@ import SiteIcon from '../components/SiteIcon.astro';
 			To get started, open the directory <code>src/pages</code> in your project.<br />
 			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
 		</p>
-		<SearchWithQueryProvider client:load/> <!-- tags={availableTags} -->
-		<!-- <div id="link-card-grid-container" class=" relative">
-			<div id="link-card-grid-container-background"></div>
-		<ul role="list" class="link-card-grid" id="video-list">
-			{videosAndThumbnailUrlsProcesed.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
-				<Card
-					href={videoUrl}
-					title={videoKey}
-					body="Watch the video"
-					thumbnailUrl={thumbnailUrl}
-					previewUrl={previewUrl}
-				/>
-			))}
-		</ul>
-	</div> -->
-
-	 <!-- Placeholder for Load More button -->
-	 <!-- <div id="pagination-controls">
-		<button id="load-more-btn" class="load-more-btn" disabled>Loading...</button>
-	  </div> -->
+		<SearchWithQueryProvider client:load/>
 	</main>
 </Layout>
 
