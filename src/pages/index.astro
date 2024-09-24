@@ -5,7 +5,7 @@ import SiteIcon from '../components/SiteIcon.astro';
 import { fetchVideosData } from '../services/awsServices';
 
 const initialVideosRenderedInServer = await fetchVideosData({
-  elementsPerPage: 3, // Fetch the first page
+  elementsPerPage: 20, // Fetch the first page
   page: 1
 });
 ---

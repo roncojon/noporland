@@ -8,7 +8,7 @@ import NoDataFound from './NoData';
 import { fetchVideosData, type FetchVideosDataType } from '../../services/awsServices';
 import type { VideoAndThumbnailUrlType } from '../../env';
 
-const elementsPerPage = 3;
+const elementsPerPage = 20;
 
 const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // Current search term
