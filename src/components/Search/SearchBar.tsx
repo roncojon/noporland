@@ -114,7 +114,6 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
   const { data, isLoading:isLoadingQuery, isError, refetch } = useQuery({
     queryKey: ['videos', searchState], // Unique query key based on searchState and currentPage
     queryFn: async () => {
-      console.log('triggered')
       if (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) {
         const result = await fetchVideosData({
           elementsPerPage,
@@ -131,8 +130,7 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
 
     staleTime: 600000, // Cache results for 10 minutes
   });
-console.log('dataaa',data)
-console.log('videoooos',videos)
+
   useEffect(() => {
     // if(searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1)
     if (!isLoadingQuery && data){
