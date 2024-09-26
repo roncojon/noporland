@@ -23,8 +23,6 @@ export const searchResponseQuery = (searchText: string, searchTags: string[]) =>
     ];
 
     setTimeout(() => {
-      // console.log('searchText', searchText);
-      // console.log('searchTags', searchTags);
 
       // Filter logic based on search text and tags
       const filteredResults = result.filter((video) => {
