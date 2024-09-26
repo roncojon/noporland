@@ -12,7 +12,7 @@ import Modal from '../Modal';
 
 const elementsPerPage = 20;
 
-const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType, tags: string[] | any}) => {
+const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType, tags: string[] | any }) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // Current search term
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // Current selected tags
   // const [currentPage, setCurrentPage] = useState(1); // Track the current page number
@@ -118,7 +118,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
     queryFn: async () => {
       if (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) {
         const result = await fetchVideosData({
-          bringTags:false,
+          bringTags: false,
           elementsPerPage,
           searchText: searchState.savedSearchTerm,
           searchTags: searchState.savedSelectedTags,
@@ -130,7 +130,9 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
     },
     // keepPreviousData: true, // Keep previous data while fetching new data
     // enabled: searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1, // Only fetch if there are filters or user paginates
-
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
     staleTime: 600000, // Cache results for 10 minutes
   });
 
@@ -164,31 +166,31 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
     }));
   };
 
-// const [isHidingPornHubIcon, setIsHidingPornHubIcon] = useState(false);
-//   const handleLoadIframe = () => {
-//     // const porHubIcon = document.querySelector('.mgp_logo mgp_isLink');
-//     // if (porHubIcon)
-//     //   porHubIcon.remove();
-//     setIsHidingPornHubIcon(true);
-//   }
+  // const [isHidingPornHubIcon, setIsHidingPornHubIcon] = useState(false);
+  //   const handleLoadIframe = () => {
+  //     // const porHubIcon = document.querySelector('.mgp_logo mgp_isLink');
+  //     // if (porHubIcon)
+  //     //   porHubIcon.remove();
+  //     setIsHidingPornHubIcon(true);
+  //   }
 
 
-const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   // Show the modal as soon as the component mounts
   useEffect(() => {
-    if(localStorage.getItem('adultConfirmed')!=='true')
-    setShowModal(true);
+    if (localStorage.getItem('adultConfirmed') !== 'true')
+      setShowModal(true);
   }, []);
 
   const closeModal = () => {
     localStorage?.setItem('adultConfirmed', 'true')
     setShowModal(false);
   };
-  
+
   return (
     <>
-    <Modal isVisible={showModal} onClose={closeModal} />
+      <Modal isVisible={showModal} onClose={closeModal} />
       <div
         className={`search-bar-container w-full h-full mt-4 relative ${isLoading ? 'opacity-50 pointer-events-none' : ''
           }`}
