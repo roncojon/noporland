@@ -1,6 +1,7 @@
 import type { VideoAndThumbnailUrlType } from "../env";
 
 type FetchVideosQueryParamsType = {
+    bringTags?:boolean;
     elementsPerPage: number;
     searchText?: string;
     searchTags?: string[];
@@ -12,9 +13,11 @@ export type FetchVideosDataType = {
     currentPage: any;
     totalPages: any;
     totalResults: any;
-    tags:string[];
+    tags?:string[];
 };
+
 export const fetchVideosData = async ({
+    bringTags,
     elementsPerPage,
     searchText,
     searchTags,
@@ -22,6 +25,7 @@ export const fetchVideosData = async ({
 }: FetchVideosQueryParamsType):Promise<FetchVideosDataType> => {
     // Build the query string
     const queryParams = new URLSearchParams({
+        bringTags: String(bringTags),
         elementsPerPage: String(elementsPerPage),
         page: String(page), // Add user pagination page
     });

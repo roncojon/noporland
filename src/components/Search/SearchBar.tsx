@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import CardReact from '../CardReact';
 import styles from '../Card.module.css';
 import Loader from './Loader';
@@ -7,10 +7,12 @@ import { CloseIcon } from './CloseIcon';
 import NoDataFound from './NoData';
 import { fetchVideosData, type FetchVideosDataType } from '../../services/awsServices';
 import type { VideoAndThumbnailUrlType } from '../../env';
+import Modal from '../Modal';
+// import RSSFeedReader from '../RSSFeedReader';
 
 const elementsPerPage = 20;
 
-const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) => {
+const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType, tags: string[] | any}) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // Current search term
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // Current selected tags
   // const [currentPage, setCurrentPage] = useState(1); // Track the current page number
@@ -19,7 +21,7 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
     savedSelectedTags: [] as string[],
     currentPage: 1
   });
-  const [videos, setVideos] = useState<VideoAndThumbnailUrlType[]|undefined>(initialVideos?.videoFiles || []);
+  const [videos, setVideos] = useState<VideoAndThumbnailUrlType[] | undefined>(initialVideos?.videoFiles || []);
   const [isLoading, setIsLoading] = useState(false);
 
   // const [totalPages, setTotalPages] = useState<number>(1); // Track the total pages returned by the backend
@@ -111,16 +113,18 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
     setIsDropdownOpen(true); // Open dropdown
   };
 
-  const { data, isLoading:isLoadingQuery, isError, refetch } = useQuery({
+  const { data, isLoading: isLoadingQuery, isError, refetch } = useQuery({
     queryKey: ['videos', searchState], // Unique query key based on searchState and currentPage
     queryFn: async () => {
       if (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) {
         const result = await fetchVideosData({
+          bringTags:false,
           elementsPerPage,
           searchText: searchState.savedSearchTerm,
           searchTags: searchState.savedSelectedTags,
           page: searchState.currentPage, // Pass the continuation token to the query
         });
+        console.log('result', result)
         return result;
       }
       else return initialVideos;
@@ -133,14 +137,14 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
 
   useEffect(() => {
     // if(searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1)
-    if (!isLoadingQuery && data){
+    if (!isLoadingQuery && data) {
       setIsLoading(false);
       setVideos(data?.videoFiles);
     }
-    else if(isLoadingQuery) {
+    else if (isLoadingQuery) {
       setIsLoading(true);
     }
-  }, [data,isLoadingQuery])
+  }, [data, isLoadingQuery])
 
   // const videos = data?.videoFiles || [];
 
@@ -161,8 +165,34 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
     }));
   };
 
+// const [isHidingPornHubIcon, setIsHidingPornHubIcon] = useState(false);
+//   const handleLoadIframe = () => {
+//     // console.log('iframe loaded');
+//     // const porHubIcon = document.querySelector('.mgp_logo mgp_isLink');
+//     // console.log('porHubIcon', porHubIcon);
+
+//     // if (porHubIcon)
+//     //   porHubIcon.remove();
+//     setIsHidingPornHubIcon(true);
+//   }
+
+
+const [showModal, setShowModal] = useState(false);
+
+  // Show the modal as soon as the component mounts
+  useEffect(() => {
+    if(localStorage.getItem('adultConfirmed')!=='true')
+    setShowModal(true);
+  }, []);
+
+  const closeModal = () => {
+    localStorage?.setItem('adultConfirmed', 'true')
+    setShowModal(false);
+  };
+  
   return (
     <>
+    <Modal isVisible={showModal} onClose={closeModal} />
       <div
         className={`search-bar-container w-full h-full mt-4 relative ${isLoading ? 'opacity-50 pointer-events-none' : ''
           }`}
@@ -230,7 +260,7 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
           {/* Tags Dropdown */}
           {(isDropdownOpen /* && tags.length > 0 */) && (
             <div className="absolute w-full mt-1 bg-stone-300 bg-opacity-70 shadow-lg rounded-md p-2 z-[201]">
-              {data?.tags?.map((tag) => (
+              {tags?.map((tag) => (
                 <div
                   key={tag}
                   className={`badge cursor-pointer p-3 m-1 shadow-[3px_3px_6px_rgba(var(--accent-dark),0.5)]  ${selectedTags.some((selectedTag) => selectedTag === tag)
@@ -265,7 +295,7 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
 
       <div /* id="linkCardGrid-container" */ className="w-full h-full !relative min-h-[300px]">
         {isLoading && (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) && <Loader />}
-        {videos?.length > 0/*  && !isLoading  */? (
+        {videos?.length > 0/*  && !isLoading  */ ? (
           <ul role="list" className={styles.linkCardGrid}>
             {videos?.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
               <CardReact
@@ -276,6 +306,8 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
                 thumbnailUrl={thumbnailUrl}
                 previewUrl={previewUrl}
               />
+              // <iframe src="https://es.pornhub.com/embed/66298b36e9dcf" frameBorder="0" allowFullScreen className={styles.linkCard}/>
+
             ))}
           </ul>
         ) : (
@@ -308,6 +340,19 @@ const SearchBar = ({ initialVideos }: { initialVideos: FetchVideosDataType }) =>
           </button>
         </div>
       </div>
+      {/* < RSSFeedReader rssUrl="https://es.pornhub.com/video/webmasterss" /> */}
+      {/* <video src="https://es.pornhub.com/embed/663da88381fa3"/> */}
+      {/* <div className=' w-full h-[400px] relative'>
+        <iframe
+          src="https://es.pornhub.com/embed/6460f34aacdaf"
+          frameBorder="0"
+          allowFullScreen
+          width="100%"
+          height="100%"
+          onLoad={handleLoadIframe}
+        />
+        <div className={`w-[100px] h-[36px]  absolute right-10 bottom-0 ${isHidingPornHubIcon ? 'backdrop-blur-md' : ''}`}></div>
+      </div> */}
     </>
   );
 };

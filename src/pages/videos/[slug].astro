@@ -1,4 +1,5 @@
 ---
+import ModalWrapper from "../../components/ModalWrapper";
 import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false; // Enable SSR if needed
@@ -20,7 +21,15 @@ const videoData = {
 ---
 
 <Layout title={videoData.title}>
+  <a href="/" title="Return home">
+  <button class="btn btn-ghost">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+</a>
   <article class="main-video-container">
+    <ModalWrapper client:only/>
     <!-- Main Video Display -->
     <div class="video-wrapper">
       <!-- style="width: 100%; aspect-ratio: 16/9;" -->

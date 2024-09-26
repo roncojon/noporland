@@ -6,7 +6,7 @@ import type { FetchVideosDataType } from '../../services/awsServices';
 // Create a query client
 const queryClient = new QueryClient();
 
-const SearchWithQueryProvider = ({initialVideos}:{initialVideos:FetchVideosDataType}) => {
+const SearchWithQueryProvider = ({initialVideos,tags}:{initialVideos:FetchVideosDataType, tags:string[] | any}) => {
   // queryClient.setQueryData(['videos', { searchTerm: '', selectedTags: [], currentPage: 1 }], {
   //   videoFiles: initialVideos.videoFiles,
   //   currentPage: initialVideos.currentPage,
@@ -17,7 +17,7 @@ const SearchWithQueryProvider = ({initialVideos}:{initialVideos:FetchVideosDataT
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SearchBar initialVideos={initialVideos}/>
+      <SearchBar initialVideos={initialVideos} tags={tags}/>
      </QueryClientProvider>
   );
 };
