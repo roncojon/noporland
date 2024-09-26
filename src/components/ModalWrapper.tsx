@@ -15,7 +15,6 @@ const ModalWrapper = () => {
     setShowModal(false);
   };
   
-  
   return (
     <Modal isVisible={showModal} onClose={closeModal} />
   )
