@@ -168,7 +168,6 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
 //   const handleLoadIframe = () => {
 //     // console.log('iframe loaded');
 //     // const porHubIcon = document.querySelector('.mgp_logo mgp_isLink');
-//     // console.log('porHubIcon', porHubIcon);
 
 //     // if (porHubIcon)
 //     //   porHubIcon.remove();
