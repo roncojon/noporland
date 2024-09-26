@@ -124,7 +124,6 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
           searchTags: searchState.savedSelectedTags,
           page: searchState.currentPage, // Pass the continuation token to the query
         });
-        console.log('result', result)
         return result;
       }
       else return initialVideos;
