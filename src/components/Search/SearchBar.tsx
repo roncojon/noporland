@@ -167,7 +167,6 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
 // const [isHidingPornHubIcon, setIsHidingPornHubIcon] = useState(false);
 //   const handleLoadIframe = () => {
 //     // const porHubIcon = document.querySelector('.mgp_logo mgp_isLink');
-
 //     // if (porHubIcon)
 //     //   porHubIcon.remove();
 //     setIsHidingPornHubIcon(true);
