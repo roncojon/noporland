@@ -3,7 +3,6 @@ import React from "react";
 
 const Modal = ({ isVisible, onClose }) => {
   if (!isVisible) return null; // If modal is not visible, don't render anything
-
   return (
     <>
       <input type="checkbox" id="my-modal" className="modal-toggle" checked readOnly />
