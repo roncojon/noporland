@@ -4,12 +4,10 @@
     aspect-ratio:4/3;
     border-radius: 8px;
     z-Index:100;
-
 }
 
 .clientMediaContainer:hover {
     /* z-Index:100; */
-
     backdrop-filter: blur(10px); /* Blurs the background behind the element */
     /* padding: 0;
     margin: 0; */
