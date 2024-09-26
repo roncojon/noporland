@@ -7,5 +7,6 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   output:'hybrid',
   integrations: [react(), tailwind(), sitemap()],
+  site: 'https://noporland.vercel.app',
   adapter: vercel(),
 });
