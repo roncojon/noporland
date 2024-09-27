@@ -19,7 +19,7 @@ const cstmPgs = async () => {
     });
 
     // Extract videoKeys and generate URLs
-    const videoUrls = videoFiles.map(file => `/videos/${file.videoKey}`);
+    const videoUrls = videoFiles.map(file => `/videos/${encodeURIComponent(file.videoKey)}`);
     allVideoKeys = [...allVideoKeys, ...videoUrls];
 
     totalPages = fetchedTotalPages;
