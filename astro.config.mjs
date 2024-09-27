@@ -3,39 +3,46 @@ import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel/serverless';
 import sitemap from "@astrojs/sitemap";
+import { fetchVideosData } from './src/services/awsServices';
 
+const cstmPgs = async () => {
+  let allVideoKeys = [];
+  let currentPage = 1;
+  let totalPages = 1;
+
+  // Fetch all pages of videos
+  do {
+    const { videoFiles, totalPages: fetchedTotalPages } = await fetchVideosData({
+      bringTags: false,
+      elementsPerPage: 100,
+      page: currentPage,
+    });
+
+    // Extract videoKeys and generate URLs
+    const videoUrls = videoFiles.map(file => `/videos/${file.videoKey}`);
+    allVideoKeys = [...allVideoKeys, ...videoUrls];
+
+    totalPages = fetchedTotalPages;
+    currentPage++;
+  } while (currentPage <= totalPages);
+
+  // Return the final array of URLs
+  return [
+    'https://noporland.vercel.app/', // Static home page
+    ...allVideoKeys.map(key => `https://noporland.vercel.app${key}`),
+  ];
+};
+
+const result = await cstmPgs();
 export default defineConfig({
-  output:'hybrid',
+  output: 'hybrid',
   integrations: [
     sitemap({
-      customPages: async () => {
-        // Fetch all video data (you might want to paginate through all pages)
-        let allVideoKeys = [];
-        let currentPage = 1;
-        let totalPages = 1;
-
-        do {
-          const { videoFiles, totalPages: fetchedTotalPages } = await fetchVideosData({
-            bringTags: false, // Or true, depending on what you need
-            elementsPerPage: 100, // Adjust this according to your needs
-            page: currentPage,
-          });
-
-          // Extract videoKeys and generate URLs
-          const videoUrls = videoFiles.map(file => `/videos/${file.videoKey}`);
-          allVideoKeys = [...allVideoKeys, ...videoUrls];
-
-          totalPages = fetchedTotalPages;
-          currentPage++;
-        } while (currentPage <= totalPages);
-
-        // Return the list of dynamic URLs, adding other static pages if necessary
-        return [
-          'https://noporland.vercel.app/', // Static pages can go here
-          ...allVideoKeys.map(key => `https://noporland.vercel.app${key}`)
-        ];
-      },
-    }),react(), tailwind()],
+      customPages: result,
+    }),
+    react(),
+    tailwind(),
+  ],
   site: 'https://noporland.vercel.app',
   adapter: vercel(),
 });
