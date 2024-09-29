@@ -39,7 +39,7 @@ const CardReact = ({ href, title, body, thumbnailUrl, previewUrl }: CardReactPro
           />
           {/* Tailwind CSS for animation */}
           <div
-            className={`absolute top-0 left-0 right-0 bottom-0 skeleton rounded-lg transition-opacity duration-250 ease-in-out ${
+            className={`absolute top-0 left-0 right-0 bottom-0 skeleton !rounded-[8px] transition-opacity duration-250 ease-in-out ${
               isLoading ? 'opacity-100' : 'opacity-0'
             }`}
           ></div>

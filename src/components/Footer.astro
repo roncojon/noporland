@@ -1,0 +1,72 @@
+<footer>
+  <div class="footer-content">
+    <nav class="footer-links">
+      <a href="/information/terms" target="_blank">Terms and Conditions</a> |
+      <a href="/information/privacy" target="_blank">Privacy Policy</a> |
+      <a href="/information/2257" target="_blank">2257 Compliance</a>
+    </nav>
+
+    <a href="https://www.rtalabel.org/" target="_blank">
+      <img src='/images/120x60_RTA-5042-1996-1400-1577-RTA_c.gif' alt="RTA badge" width="90px"/>
+    </a>
+  </div>
+</footer>
+
+<style>
+  footer {
+    width: 100%;
+    background-color: #151515;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px 0;
+    padding-left:18px;
+    padding-right:28px;
+    text-align: center;
+  }
+
+  a {
+    white-space: nowrap; 
+  }
+  .footer-content {
+    width: 100%;
+    /* margin-left: 24px;
+    margin-right: 24px; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+     /* Allows the content to wrap on smaller screens */
+  }
+
+  .footer-links {
+    margin-right: 20px; /* Adds space between the links and the image */
+  }
+
+  .footer-links a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  footer img {
+    margin-left: 10px;
+  }
+
+  /* Media query to handle smaller screens */
+  @media (max-width: 650px) {
+    .footer-content {
+      flex-direction: column; /* Stack the content vertically on smaller screens */
+      align-items: center; /* Center items */
+    }
+    
+    .footer-links {
+      margin-bottom: 10px; /* Adds space below links when they stack */
+    }
+  }
+</style>

@@ -215,7 +215,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
               JSON.stringify(selectedTags) !== JSON.stringify(searchState.savedSelectedTags))
             ? (
               <button
-                className={`absolute right-3 top-2 w-8 h-8 p-1 rounded-full flex items-center justify-center transition-colors ${(searchTerm.length > 0 || selectedTags.length > 0)
+                className={`absolute right-3 top-2 w-8 h-8 p-1 rounded-lg flex items-center justify-center transition-colors ${(searchTerm.length > 0 || selectedTags.length > 0)
                   ? 'animate-ripple-effect bg-transparent'
                   : 'text-gray-400 hover:text-gray-600'
                   } ${(searchTerm.length > 0 || selectedTags.length > 0)
@@ -244,7 +244,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
             ) :
             <button
               id="search-close-icon"
-              className="absolute right-3 top-2 w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2 w-8 h-8 p-1 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600"
               onClick={handleClearSearch}
             >
               {isLoading ? (
@@ -257,7 +257,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
 
           {/* Tags Dropdown */}
           {(isDropdownOpen /* && tags.length > 0 */) && (
-            <div className="absolute w-full mt-1 bg-stone-300 bg-opacity-70 shadow-lg rounded-md p-2 z-[201]">
+            <div className="absolute w-full mt-1 bg-stone-400 bg-opacity-90 shadow-lg rounded-md p-2 z-[201]">
               {tags?.map((tag) => (
                 <div
                   key={tag}
