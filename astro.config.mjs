@@ -28,8 +28,11 @@ const cstmPgs = async () => {
 
   // Return the final array of URLs
   return [
-    'https://noporland.vercel.app/', // Static home page
-    ...allVideoKeys.map(key => `https://noporland.vercel.app${key}`),
+    'https://noporland.me/', // Static home page
+    'https://noporland.me/information/terms',
+    'https://noporland.me/information/privacy',
+    'https://noporland.me/information/2257',
+    ...allVideoKeys.map(key => `https://noporland.me${key}`),
   ];
 };
 

@@ -225,6 +225,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
                 onClick={handleSearch}
                 aria-label="Search"
               >
+                {!isLoading ? 
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
@@ -238,7 +239,10 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
                     strokeWidth={2}
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
-                </svg>
+                </svg> :
+                <div className="loading loading-spinner loading-sm text-gray-400"></div>
+
+                }
               </button>
 
             ) :
@@ -257,22 +261,24 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
 
           {/* Tags Dropdown */}
           {(isDropdownOpen /* && tags.length > 0 */) && (
-            <div className="absolute w-full mt-1 bg-stone-400 bg-opacity-90 shadow-lg rounded-md p-2 z-[201]">
-              {tags?.map((tag) => (
-                <div
-                  key={tag}
-                  className={`badge cursor-pointer p-3 m-1 shadow-[3px_3px_6px_rgba(var(--accent-dark),0.5)]  ${selectedTags.some((selectedTag) => selectedTag === tag)
-                    ? 'badge-primary border-none bg-[rgb(var(--accent))]  text-[rgb(var(--accent-light))] font-bold'
-                    : 'badge-outline border-none bg-stone-300 text-gray-700 font-bold'
-                    }`}
-                  onClick={(e) => toggleTagSelection(tag, e)}
-                  onKeyDown={(e) => handleKeyDown(e)} // Trigger search on Enter key for tags
-                  tabIndex={0} // Allow focusing the tag chips for keyboard accessibility
-                >
-                  {tag}
-                </div>
-              ))}
-            </div>
+           <div className="absolute w-full mt-1 bg-stone-400 bg-opacity-70 shadow-lg rounded-md p-2 z-[201]">
+           {tags?.map((tag) => (
+             <div
+               key={tag}
+               className={`badge cursor-pointer p-3 m-1 shadow-[3px_3px_6px_rgba(var(--accent-dark),0.5)] 
+                 ${selectedTags.some((selectedTag) => selectedTag === tag)
+                   ? 'badge-primary border-none bg-[rgb(var(--accent))] text-[rgb(var(--accent-light))] font-bold hover:shadow-[5px_5px_10px_rgba(var(--accent-dark),0.8)] hover:scale-95' // Add scale and hover shadow for selected tags
+                   : 'badge-outline border-none text-gray-700 font-bold hover:shadow-[5px_5px_10px_rgba(0,0,0,0.4)] hover:scale-95' // Add scale and hover shadow for unselected tags
+                 }  !bg-stone-400 transition-transform duration-200`} // Added transition for smooth effect
+               onClick={(e) => toggleTagSelection(tag, e)}
+               onKeyDown={(e) => handleKeyDown(e)} // Trigger search on Enter key for tags
+               tabIndex={0} // Allow focusing the tag chips for keyboard accessibility
+             >
+               {tag}
+             </div>
+           ))}
+         </div>
+         
           )}
         </div>
 
