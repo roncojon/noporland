@@ -267,9 +267,9 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
                key={tag}
                className={`badge cursor-pointer p-3 m-1 shadow-[3px_3px_6px_rgba(var(--accent-dark),0.5)] 
                  ${selectedTags.some((selectedTag) => selectedTag === tag)
-                   ? 'badge-primary border-none bg-[rgb(var(--accent))] text-[rgb(var(--accent-light))] font-bold hover:shadow-[5px_5px_10px_rgba(var(--accent-dark),0.8)] hover:scale-95' // Add scale and hover shadow for selected tags
+                   ? 'badge-primary border-none bg-[rgb(var(--accent))] text-[rgb(var(--accent))] font-bold hover:shadow-[5px_5px_10px_rgba(var(--accent-dark),0.8)] hover:scale-95' // Add scale and hover shadow for selected tags
                    : 'badge-outline border-none text-gray-700 font-bold hover:shadow-[5px_5px_10px_rgba(0,0,0,0.4)] hover:scale-95' // Add scale and hover shadow for unselected tags
-                 }  !bg-stone-400 transition-transform duration-200`} // Added transition for smooth effect
+                 }  !bg-stone-200 transition-transform duration-200`} // Added transition for smooth effect
                onClick={(e) => toggleTagSelection(tag, e)}
                onKeyDown={(e) => handleKeyDown(e)} // Trigger search on Enter key for tags
                tabIndex={0} // Allow focusing the tag chips for keyboard accessibility
