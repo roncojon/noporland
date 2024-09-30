@@ -45,6 +45,7 @@ export const fetchVideosData = async ({
             {
                 method: 'GET',
                 headers: {
+                    'Origin': 'https://www.noporland.me',
                     'Content-Type': 'application/json',
                 },
                 // credentials: 'include', // if needed for authentication with cookies
