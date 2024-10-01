@@ -2,50 +2,73 @@
 import ModalWrapper from "../../components/ModalWrapper";
 import Layout from "../../layouts/Layout.astro";
 
-export const prerender = false; // Enable SSR if needed
+// Enable SSR if needed
+export const prerender = false; 
 
 // Access the slug from the URL dynamically using Astro.params
 const { slug } = Astro.params;
 
+// Fetch the query parameters
+const searchParams = new URL(Astro.request.url).searchParams;
+const tags = searchParams.get('tags') ? JSON.parse(searchParams.get('tags')) : [];
+
 // Map the slug to the external CloudFront URL
 const videoUrl = `https://d1a9sy9txb1eh6.cloudfront.net/MainVideos/${slug}`;
 
-// Example video data (replace with actual logic for fetching video data)
+// Example video data
 const videoData = {
-  title: `${slug}` /* Video Title:  */,
-  description: `` /* This is the description for the video: ${slug} */,
+  title: `${slug}`, // Video Title: 
+  description: "" /* `This is the description for the video: ${slug}` */,
   videoUrl,
+  tags, // Adding the tags to videoData
 };
----
 
+// Log the tags to console
+console.log("Tags for video:", videoData.tags);
+---
 <Layout title={videoData.title}>
   <a href="/" title="Return home">
-  <button class="btn btn-ghost">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-    </svg>
-  </button>
-</a>
+    <button class="btn btn-ghost">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+  </a>
   <article class="main-video-container">
     <ModalWrapper client:only/>
     <!-- Main Video Display -->
     <div class="video-wrapper">
-      <!-- style="width: 100%; aspect-ratio: 16/9;" -->
       <video
         class="main-video"
         controls
         preload="auto"
         src={videoData.videoUrl}
-        style="height: 100%; aspect-ratio: 16/9;"></video>
+        style="height: 100%; aspect-ratio: 16/9;">
+      </video>
     </div>
 
     <!-- Video Details -->
     <div class="video-info">
       <h2>{videoData.title}</h2>
       <p>{videoData.description}</p>
+      <!-- Display the tags if available -->
+      <!-- <ul>
+        {videoData?.tags?.map(tag => <li>{tag || ""}</li>)} -->
+
+        <div class="flex flex-wrap my-2 w-full">
+          {videoData?.tags?.map((tag) => (
+            <div
+              class="badge badge-primary flex items-center p-3 m-1 border-none bg-[rgb(var(--accent))]  text-[rgb(var(--accent-light))] font-bold "
+            >
+              {tag}
+            </div>
+          ))}
+        </div>
+      <!-- </ul> -->
     </div>
   </article>
 </Layout>
+
 <style>
   * {
     box-sizing: border-box;
@@ -61,7 +84,8 @@ const videoData = {
     /* max-width: 900px; */
     /* max-width: calc(100% - 400px); */
     margin: auto;
-    max-height: 100%;
+    /* max-height: 100%; */
+    /* min- */height: calc(100% - 129px);
   }
 
   .video-wrapper {
@@ -92,5 +116,11 @@ const videoData = {
     font-size: 1.25rem;
     color: rgba(255, 255, 255, 0.8);
     margin: 0;
+  }
+
+  @media (max-width: 650px) {
+    .main-video-container {
+    /* min- */height: calc(100% - 163px);
+    }
   }
 </style>

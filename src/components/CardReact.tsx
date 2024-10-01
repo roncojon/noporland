@@ -8,9 +8,10 @@ interface CardReactProps {
   href: string;
   thumbnailUrl?: string;
   previewUrl?: string;
+  tags?: string[];
 }
 
-const CardReact = ({ href, title, body, thumbnailUrl, previewUrl }: CardReactProps) => {
+const CardReact = ({ href, title, body, thumbnailUrl, previewUrl, tags }: CardReactProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -27,7 +28,7 @@ const CardReact = ({ href, title, body, thumbnailUrl, previewUrl }: CardReactPro
 
   return (
     <li className={styles.linkCard}>
-      <a href={`/videos/${title}`} title={title}>
+      <a href={`/videos/${title}?tags=${encodeURIComponent(JSON.stringify(tags))}`} title={title}>
         <div className={styles.mediaContainer}>
           <img
             ref={imgRef} // Reference to the image element

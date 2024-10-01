@@ -301,7 +301,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
         {isLoading && (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) && <Loader />}
         {videos?.length > 0/*  && !isLoading  */ ? (
           <ul role="list" className={styles.linkCardGrid}>
-            {videos?.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl }) => (
+            {videos?.map(({ videoKey, videoUrl, thumbnailUrl, previewUrl, tags }) => (
               <CardReact
                 key={videoKey}
                 href={videoUrl}
@@ -309,6 +309,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
                 body="Watch the video"
                 thumbnailUrl={thumbnailUrl}
                 previewUrl={previewUrl}
+                tags={tags}
               />
               // <iframe src="https://es.pornhub.com/embed/66298b36e9dcf" frameBorder="0" allowFullScreen className={styles.linkCard}/>
 
