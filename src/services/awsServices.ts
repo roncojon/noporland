@@ -63,7 +63,6 @@ export const fetchVideosData = async ({
         // }
 
         const data = await response.json(); // Properly await the JSON response
-        console.log('responseData: ', data);
 
         // Return the video files, current page, total pages, and total results
         return {
