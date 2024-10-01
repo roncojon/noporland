@@ -1,5 +1,6 @@
 ---
 import ModalWrapper from "../../components/ModalWrapper";
+import VideoPlayer from "../../components/VideoPlayer";
 import Layout from "../../layouts/Layout.astro";
 
 // Enable SSR if needed
@@ -38,13 +39,16 @@ const videoData = {
     <ModalWrapper client:only/>
     <!-- Main Video Display -->
     <div class="video-wrapper">
-      <video
+      <!-- <video
         class="main-video"
         controls
         preload="auto"
-        src={videoData.videoUrl}
+        VAST-URL="https://s.magsrv.com/v1/vast.php?idzone=5435190"
+        src={/* "https://s.magsrv.com/v1/vast.php?idzone=5435190" */videoData.videoUrl}
         style="height: 100%; aspect-ratio: 16/9;">
-      </video>
+      </video> -->
+
+      <VideoPlayer videoUrl={videoData.videoUrl} />
     </div>
 
     <!-- Video Details -->
