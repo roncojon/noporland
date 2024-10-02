@@ -69,7 +69,7 @@ const videoData = {
         {videoData?.tags?.map(tag => <li>{tag || ""}</li>)} -->
 
         <div class="flex flex-wrap my-2 w-full">
-          {videoData?.tags?.map((tag) => (
+          {videoData?.tags.sort((a, b) => a.localeCompare(b))?.map((tag) => (
             <div
               class="badge badge-primary flex items-center p-3 m-1 border-none bg-[rgb(var(--accent))]  text-[rgb(var(--accent-light))] font-bold "
             >
