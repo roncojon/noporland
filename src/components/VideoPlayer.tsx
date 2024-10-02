@@ -115,10 +115,11 @@ const VideoPlayer = ({ videoUrl }) => {
               },
               {
                 roll: "onPauseRoll", // Pre-roll ad
-                vastTag: "https://s.magsrv.com/splash.php?idzone=5435248", // Use the dynamic adTag state here
+                // vastTag: "https://s.magsrv.com/splash.php?idzone=5435248", // Use the dynamic adTag state here
+                vastTag: "https://s.magsrv.com/splash.php?idzone=5435436", // Use the dynamic adTag state here
               },
               // {
-              //   roll: "onPauseRoll", // Pre-roll ad
+              //   roll: "midRoll", // Pre-roll ad
               //   vastTag: "https://s.magsrv.com/splash.php?idzone=5435342", // Use the dynamic adTag state here
               // },
             ],

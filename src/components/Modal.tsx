@@ -70,7 +70,8 @@ const Modal = ({ isVisible, onClose }) => {
   <button
     onClick={() => {
       localStorage?.setItem("adultConfirmed", "false");
-      window.location.href = "https://google.com";
+      // window.location.href = "https://google.com";
+      window.location.href = "https://www.google.com/search?q=noporland";
     }}
     className="btn text-lg w-full sm:w-auto !ml-0"
   >
