@@ -44,10 +44,11 @@ export const fetchVideosData = async ({
             `https://7iq10f6qtk.execute-api.us-west-1.amazonaws.com/dev/videos/?${queryParams.toString()}`, // Use dynamic query string
             {
                 method: 'GET',
-                headers: {
-                    'Origin': 'https://www.noporland.me',
-                    'Content-Type': 'application/json',
-                },
+                // headers: {
+                //     'Origin': 'https://www.noporland.me',
+                //     'Content-Type': 'application/json',
+                // },
+                // referrer: 'https://www.noporland.me'
                 // credentials: 'include', // if needed for authentication with cookies
             }
         );
