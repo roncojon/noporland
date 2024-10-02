@@ -36,7 +36,7 @@ const videoData = {
     </button>
   </a>
   <article class="main-video-container">
-    <ModalWrapper client:only/>
+    <ModalWrapper client:only="react"/>
     <!-- Main Video Display -->
     <div class="video-wrapper">
       <!-- <video
@@ -48,7 +48,7 @@ const videoData = {
         style="height: 100%; aspect-ratio: 16/9;">
       </video> -->
 
-      <VideoPlayer videoUrl={videoData.videoUrl} />
+      <VideoPlayer client:only="react" videoUrl={videoData.videoUrl} /> <!-- client:only="react" -->
     </div>
 
     <!-- Video Details -->

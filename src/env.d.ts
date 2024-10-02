@@ -8,6 +8,12 @@ export type VideoAndThumbnailUrlType = {
 	tags:string[]
 };
 
+declare global {
+    interface Window {
+      fluidPlayer: any; // Declare fluidPlayer on the window object
+    }
+  }
+  
 // export type Tag = {
 //     id: number;
 //     name: string;
