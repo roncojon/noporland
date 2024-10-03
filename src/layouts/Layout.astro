@@ -46,6 +46,18 @@ const { title } = Astro.props;
 <!-- <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css"> -->
 
   </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DE11DV9YS7"></script>
+  <script>
+    // @ts-ignore
+    window.dataLayer = window.dataLayer || [];
+    // @ts-ignore
+    function gtag(){dataLayer.push(arguments);}
+    // @ts-ignore
+    gtag('js', new Date());
+    // @ts-ignore
+    gtag('config', 'G-DE11DV9YS7');
+  </script>
   <body>
     <slot />
     <SpeedInsights/>
