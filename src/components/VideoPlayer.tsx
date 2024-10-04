@@ -165,7 +165,7 @@ const VideoPlayer = ({ videoUrl }) => {
       <video
         id="example-player"  // Use a valid id that matches in fluidPlayer initialization
         ref={videoRef}
-        className="w-full h-full bg-[#171313] rounded-lg"
+        className="w-full h-full bg-[#171313] rounded-lg aspect-[16/9]"
         controls
         preload="metadata"
       >
