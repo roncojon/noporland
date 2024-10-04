@@ -104,7 +104,7 @@ const VideoPlayer = ({ videoUrl }) => {
     const loadFluidPlayer = () => {
       const script = document.createElement("script");
       script.src = "https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js";
-      script.defer = true; // Add defer attribute to the script
+      script.async = true; // Add defer attribute to the script
       script.onload = () => {
         // Initialize Fluid Player with a fallback mechanism for VAST tag
         const player = window.fluidPlayer("example-player", {
