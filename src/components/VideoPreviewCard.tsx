@@ -29,7 +29,7 @@ const VideoPreviewCard = ({ previewUrl }) => {
             className="preview"
             muted
             loop
-            preload="auto"
+            preload="metadata"
             src={previewUrl}
             autoPlay
             onLoadedData={handleVideoLoaded} // Trigger when video data is loaded
