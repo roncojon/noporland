@@ -4,7 +4,7 @@ import SearchWithQueryProvider from '../components/Search/SearchWithQueryProvide
 import SiteIcon from '../components/SiteIcon.astro';
 import { fetchVideosData } from '../services/awsServices';
 
-export const prerender = false;
+// export const prerender = false;
 const initialVideosRenderedInServer = await fetchVideosData({
 	bringTags:true,
     elementsPerPage: 20, // Fetch the first page
