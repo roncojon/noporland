@@ -137,7 +137,7 @@ const VideoPlayer = ({ videoUrl }) => {
 
           // Check if the error is related to VAST loading
           if (error.code === 900) { // 900 is the Fluid Player code for VAST failure
-            console.log("VAST ad failed to load. Switching to fallback VAST tag...");
+            // console.log("VAST ad failed to load. Switching to fallback VAST tag...");
 
             // Switch to another fallback VAST tag
             setAdTag("https://s.magsrv.com/v1/vast.php?idzone=5435280");
