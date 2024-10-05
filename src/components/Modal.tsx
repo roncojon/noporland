@@ -11,19 +11,19 @@ const Modal = ({ isVisible, onClose }) => {
 
   return (
     <>
-      {/* <input
+      <input
         type="checkbox"
         id="my-modal"
         className="modal-toggle"
         checked
         readOnly
-      /> */}
+        aria-hidden="true"
+      />
       <div className="modal backdrop-blur-xl">
         <div className="modal-box ">
-          <h3 className="font-bold text-2xl mb-2">
-            <span className="text-warning">WARNING</span> This site is for adults
-            only!
-          </h3>
+          <p className="font-bold text-2xl mb-2">
+            <span className="text-warning">WARNING</span> This site is for adults only!
+          </p>
           {/* <p className="py-4 text-lg">Are you 18 years old or older?</p> */}
           {/* <p className="py-4 text-lg"> By entering this website, you affirm that you are at least 18 years of age
           and agree to the Terms of Service, which are available <a href="google.com">HERE</a>
