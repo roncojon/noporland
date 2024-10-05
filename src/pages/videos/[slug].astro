@@ -39,15 +39,21 @@ const videoData = {
     <ModalWrapper client:only="react"/>
     <!-- Main Video Display -->
     <div class="video-wrapper">
-        <div class=" item1">
-         <VideoPlayer client:only="react" videoUrl={videoData.videoUrl} /> <!-- client:only="react" -->
+        <div id="item_01" class=" item1">
+         <VideoPlayer client:idle videoUrl={videoData.videoUrl} /> <!-- client:only="react" -->
         </div>
         <div class=" itemContainer">
-         <div class=" item2">
-          <ins class="eas6a97888e37" data-zoneid="5435438"></ins> 
+         <div id="item_02" class=" item2">
+          <!-- Video -->
+          <!-- <ins class="eas6a97888e37" data-zoneid="5435438"></ins>  -->
+          <!-- Img Substitute for video in poor connection cases -->
+          <!-- <ins class="eas6a97888e2" data-zoneid="5437984"></ins>  -->
          </div>
-          <div class=" item3">
-           <ins class="eas6a97888e37" data-zoneid="5435474"></ins> 
+          <div id="item_03" class=" item3">
+           <!-- Video -->
+           <!-- <ins class="eas6a97888e37" data-zoneid="5435474"></ins>  -->
+           <!-- Img Substitute for video in poor connection cases -->
+           <!-- <ins class="eas6a97888e2" data-zoneid="5437988"></ins>  -->
           </div>
         </div>
         
@@ -81,13 +87,14 @@ const videoData = {
       <!-- </ul> -->
     </div>
     <div class=" w-full flex justify-center">
-     <div class=" w-[60%] max-w-[820px] overflow-auto">
+     <div id="conditionalAd" class=" w-[60%] max-w-[820px] overflow-auto ">
       <ins class="eas6a97888e20" data-zoneid="5435448"></ins> 
      </div>
     </div>
   </article>
 </Layout>
-
+<!-- SHOW VIDEOS OR Regular Ads according to user´s connection speed -->
+<script type="module" src="/scripts/importScriptIfConnectionIsGood.js" />
 <style>
   * {
     box-sizing: border-box;

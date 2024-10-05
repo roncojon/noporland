@@ -18,33 +18,35 @@ const tags:string[]|any = initialVideosRenderedInServer?.tags;
 	<main>
 		<SiteIcon />
 		<h1>Welcome to <span class="text-gradient">NoporLand</span></h1>
-		<p class="instructions">
+		<header class="instructions text-2xl">
 			Have fun in our  <code>fast</code> <code>simple</code> <code>enjoyable</code> site... <!-- <br /> -->
-			and most important, it's <strong>Free</strong>
-		</p>
+			and most important, it's <strong>Free</strong>. <br />
+			Explore a variety of adult content including milfs, uncensored videos, hentai and much more!
+		</header>
 
 		<!-- <div class=" w-[800px]">
 		<iframe src="https://es.pornhub.com/embed/66298b36e9dcf" frameborder="0" allowfullscreen width="100%"/>
 	</div> -->
-	<div class=" w-full min-h-[100px] flex flex-col 2xl:!flex-row justify-center items-center gap-1 overflow-hidden ">
-		<div class="hidden w-full sm:flex justify-center">
-	<ins class="eas6a97888e2" data-zoneid="5434922"></ins> 
-</div>
-
-<div class=" w-full hidden 2xl:flex justify-center ">
-	<ins class="eas6a97888e2" data-zoneid="5434934"></ins> 
-</div>
-
-<div class=" w-full flex justify-center sm:hidden">
- <ins class="eas6a97888e10" data-zoneid="5435024"></ins> 
-</div>
-</div>
+	
 
 	
 
 		<SearchWithQueryProvider initialVideos={initialVideosRenderedInServer} tags={tags.sort((a, b) => a.localeCompare(b))} client:load/>
-	</main>
-
+	
+		</main>
+		<div class=" w-full min-h-[100px] flex flex-col 2xl:!flex-row justify-center items-center gap-1 overflow-hidden mb-4">
+			<div class="hidden w-full sm:flex justify-center">
+			 <ins class="eas6a97888e2" data-zoneid="5434922"></ins> 
+			</div>
+	
+			<div class=" w-full hidden 2xl:flex justify-center ">
+			 <ins class="eas6a97888e2" data-zoneid="5434934"></ins> 
+		   </div>
+	
+		   <div class=" w-full flex justify-center sm:hidden">
+			<ins class="eas6a97888e10" data-zoneid="5435024"></ins> 
+		   </div>
+		</div>
 
 
 
@@ -62,7 +64,8 @@ const tags:string[]|any = initialVideosRenderedInServer?.tags;
     pn_soft_ask_no = "NO, THANKS"; 
 </script> -->
 
-<script defer type="application/javascript" src="https://js.wpnsrv.com/pn.php"></script>
+<!-- <script defer type="application/javascript" src="https://js.wpnsrv.com/pn.php"></script> -->
+
 </Layout>
 
 <!-- Add client-side script to handle pagination -->
