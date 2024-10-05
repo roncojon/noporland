@@ -28,10 +28,10 @@ const cstmPgs = async () => {
 
   // Return the final array of URLs
   return [
-    'https://www.noporland.me', // Static home page
-    'https://www.noporland.me/information/terms',
-    'https://www.noporland.me/information/privacy',
-    'https://www.noporland.me/information/2257',
+    // 'https://www.noporland.me', // Static home page
+    // 'https://www.noporland.me/information/terms',
+    // 'https://www.noporland.me/information/privacy',
+    // 'https://www.noporland.me/information/2257',
     ...allVideoKeys.map(key => `https://www.noporland.me${key}`),
   ];
 };
