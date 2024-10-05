@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 
 const Modal = ({ isVisible, onClose }) => {
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  // const [termsAccepted, setTermsAccepted] = useState(false);
 
   // const handleCheckboxChange = (e) => {
   //   setTermsAccepted(e.target.checked);
@@ -11,13 +11,13 @@ const Modal = ({ isVisible, onClose }) => {
 
   return (
     <>
-      <input
+      {/* <input
         type="checkbox"
         id="my-modal"
         className="modal-toggle"
         checked
         readOnly
-      />
+      /> */}
       <div className="modal backdrop-blur-xl">
         <div className="modal-box ">
           <h3 className="font-bold text-2xl mb-2">
