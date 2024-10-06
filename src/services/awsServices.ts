@@ -16,6 +16,16 @@ export type FetchVideosDataType = {
     tags?:string[];
 };
 
+// Helper function to calculate the global index based on page and elements per page
+const calculateGlobalIndex = (
+    page: number, 
+    elementsPerPage: number, 
+    currentIndex: number
+): number => {
+    return (page - 1) * elementsPerPage + currentIndex;
+};
+
+
 export const fetchVideosData = async ({
     bringTags,
     elementsPerPage,
@@ -42,6 +52,7 @@ export const fetchVideosData = async ({
         // Perform the fetch request with dynamic query parameters
         const response = await fetch(
             `https://7iq10f6qtk.execute-api.us-west-1.amazonaws.com/dev/videos/?${queryParams.toString()}`, // Use dynamic query string
+            // 'https://7iq10f6qtk.execute-api.us-west-1.amazonaws.com/dev/videos/?bringTags=false&elementsPerPage=100&page=1',
             {
                 method: 'GET',
                 // headers: {
@@ -66,16 +77,19 @@ export const fetchVideosData = async ({
         const data = await response.json(); // Properly await the JSON response
 
         // Return the video files, current page, total pages, and total results
-        return {
-            videoFiles: data.videoFiles?.map((item: VideoAndThumbnailUrlType) => ({
+        const finalResult = {
+            videoFiles: data.videoFiles?.map((item: VideoAndThumbnailUrlType,index) => ({
                 ...item,
                 videoKey: item?.videoKey?.slice(11), // Remove 'MainVideos/' prefix
+                index: calculateGlobalIndex(page, elementsPerPage, index),
             })) || [],
             currentPage: data.currentPage || 1, // Current page
             totalPages: data.totalPages || 1, // Total number of pages
             totalResults: data.totalResults || 0, // Total number of results
             tags: data.tags || [],
         };
+        // console.log('finalResult',JSON.stringify(finalResult))
+        return finalResult;
     } catch (error) {
         // Handle any network or parsing errors
         console.error('Fetch error:', error);

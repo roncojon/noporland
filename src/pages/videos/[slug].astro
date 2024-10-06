@@ -2,6 +2,7 @@
 import ModalWrapper from "../../components/ModalWrapper";
 import VideoPlayer from "../../components/VideoPlayer";
 import Layout from "../../layouts/Layout.astro";
+import { fetchVideosData } from "../../services/awsServices";
 
 // Enable SSR if needed
 export const prerender = false; 
@@ -11,7 +12,13 @@ const { slug } = Astro.params;
 
 // Fetch the query parameters
 const searchParams = new URL(Astro.request.url).searchParams;
-const tags = searchParams.get('tags') ? JSON.parse(searchParams.get('tags')) : [];
+const videoIndex = searchParams.get('index') ? Number(searchParams.get('index')) : 0;
+let tags = searchParams.get('tags') ? JSON.parse(searchParams.get('tags')) : await fetchVideosData({
+          bringTags: false,
+          elementsPerPage:1,
+          searchText: slug,
+          page: 1, 
+}).then(r=>r?.videoFiles[0]?.tags);
 
 // Map the slug to the external CloudFront URL
 const videoUrl = `https://d1a9sy9txb1eh6.cloudfront.net/MainVideos/${slug}`;
@@ -24,8 +31,6 @@ const videoData = {
   tags, // Adding the tags to videoData
 };
 
-// Log the tags to console
-// console.log("Tags for video:", videoData.tags);
 ---
 <Layout title={videoData.title}>
   <a href="/" title="Return home">
@@ -40,7 +45,7 @@ const videoData = {
     <!-- Main Video Display -->
     <div class="video-wrapper">
         <div id="item_01" class=" item1">
-         <VideoPlayer client:idle videoUrl={videoData.videoUrl} /> <!-- client:only="react" -->
+         <VideoPlayer client:idle videoUrl={videoData.videoUrl} videoIndex={videoIndex}/> <!-- client:only="react" -->
         </div>
         <div class=" itemContainer">
          <div id="item_02" class=" item2">
@@ -88,13 +93,13 @@ const videoData = {
     </div>
     <div class=" w-full flex justify-center">
      <div id="conditionalAd" class=" w-[60%] max-w-[820px] overflow-auto ">
-      <ins class="eas6a97888e20" data-zoneid="5435448"></ins> 
+      <!-- <ins class="eas6a97888e20" data-zoneid="5435448"></ins>  -->
      </div>
     </div>
   </article>
 </Layout>
 <!-- SHOW VIDEOS OR Regular Ads according to user´s connection speed -->
-<script type="module" src="/scripts/importScriptIfConnectionIsGood.js" />
+<!-- <script type="module" src="/scripts/importScriptIfConnectionIsGood.js" /> -->
 <style>
   * {
     box-sizing: border-box;

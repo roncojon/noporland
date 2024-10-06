@@ -9,9 +9,10 @@ interface CardReactProps {
   thumbnailUrl?: string;
   previewUrl?: string;
   tags?: string[];
+  index?: number
 }
 
-const CardReact = ({ href, title, body, thumbnailUrl, previewUrl, tags }: CardReactProps) => {
+const CardReact = ({ href, title, body, thumbnailUrl, previewUrl, tags, index }: CardReactProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -28,7 +29,9 @@ const CardReact = ({ href, title, body, thumbnailUrl, previewUrl, tags }: CardRe
 
   return (
     <li className={styles.linkCard}>
-      <a href={`/videos/${title}?tags=${encodeURIComponent(JSON.stringify(tags))}`} title={title}>
+      <a
+        href={`/videos/${title}?tags=${encodeURIComponent(JSON.stringify(tags))}&index=${index}`}
+        title={title}>
         <div className={styles.mediaContainer}>
           <img
             ref={imgRef} // Reference to the image element
@@ -40,9 +43,8 @@ const CardReact = ({ href, title, body, thumbnailUrl, previewUrl, tags }: CardRe
           />
           {/* Tailwind CSS for animation */}
           <div
-            className={`absolute top-0 left-0 right-0 bottom-0 skeleton !rounded-[8px] transition-opacity duration-250 ease-in-out ${
-              isLoading ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute top-0 left-0 right-0 bottom-0 skeleton !rounded-[8px] transition-opacity duration-250 ease-in-out ${isLoading ? 'opacity-100' : 'opacity-0'
+              }`}
           ></div>
           <VideoPreviewCard previewUrl={previewUrl} />
         </div>
