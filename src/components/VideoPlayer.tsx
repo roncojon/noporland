@@ -24,23 +24,23 @@ const VideoPlayer = ({ videoUrl, videoIndex }:VideoPlayerProps) => {
         // console.log('suggestions12',suggestions12)
         // Initialize Fluid Player with a fallback mechanism for VAST tag
         const player = window.fluidPlayer("example-player", {
-          // vastOptions: {
-          //   adList: [
-          //     {
-          //       roll: "preRoll", // Pre-roll ad
-          //       vastTag: adTag, // Use the dynamic adTag state here
-          //     },
-          //     {
-          //       roll: "onPauseRoll", // Pre-roll ad
-          //       // vastTag: "https://s.magsrv.com/splash.php?idzone=5435248", // Use the dynamic adTag state here
-          //       vastTag: "https://s.magsrv.com/splash.php?idzone=5435436", // Use the dynamic adTag state here
-          //     },
-          //     // {
-          //     //   roll: "midRoll", // Pre-roll ad
-          //     //   vastTag: "https://s.magsrv.com/splash.php?idzone=5435342", // Use the dynamic adTag state here
-          //     // },
-          //   ],
-          // },
+          vastOptions: {
+            adList: [
+              {
+                roll: "preRoll", // Pre-roll ad
+                vastTag: adTag, // Use the dynamic adTag state here
+              },
+              {
+                roll: "onPauseRoll", // Pre-roll ad
+                // vastTag: "https://s.magsrv.com/splash.php?idzone=5435248", // Use the dynamic adTag state here
+                vastTag: "https://s.magsrv.com/splash.php?idzone=5435436", // Use the dynamic adTag state here
+              },
+              // {
+              //   roll: "midRoll", // Pre-roll ad
+              //   vastTag: "https://s.magsrv.com/splash.php?idzone=5435342", // Use the dynamic adTag state here
+              // },
+            ],
+          },
           layoutControls: {
             autoPlay: false,
             preload: "auto",
@@ -133,7 +133,7 @@ const VideoPlayer = ({ videoUrl, videoIndex }:VideoPlayerProps) => {
       <video
         id="example-player"  // Use a valid id that matches in fluidPlayer initialization
         ref={videoRef}
-        className="w-full h-full bg-[#171313] rounded-lg " /* aspect-[16/9] */
+        className="w-full h-full bg-[#171313] rounded-lg aspect-[16/9]" 
         controls
         preload="metadata"
       >
