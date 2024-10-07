@@ -31,7 +31,7 @@ const tags:string[]|any = initialVideosRenderedInServer?.tags;
 
 	
 
-		<SearchWithQueryProvider initialVideos={initialVideosRenderedInServer} tags={tags.sort((a, b) => a.localeCompare(b))} client:load/>
+		<SearchWithQueryProvider initialVideos={initialVideosRenderedInServer} tags={tags?.sort((a, b) => a.localeCompare(b))} client:load/>
 	
 		</main>
 		<div class=" w-full min-h-[100px] flex flex-col 2xl:!flex-row justify-center items-center gap-1 overflow-hidden mb-4">

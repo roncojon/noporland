@@ -80,7 +80,7 @@ const videoData = {
         {videoData?.tags?.map(tag => <li>{tag || ""}</li>)} -->
 
         <div class="flex flex-wrap my-2 w-full">
-          {videoData?.tags.sort((a, b) => a.localeCompare(b))?.map((tag) => (
+          {videoData?.tags?.sort((a, b) => a.localeCompare(b))?.map((tag) => (
             <div
               class="badge badge-primary flex items-center p-3 m-1 border-none bg-[rgb(var(--accent))]  text-[rgb(var(--accent-light))] font-bold "
             >
@@ -221,4 +221,31 @@ const videoData = {
   width: 46%;
   }
 }
+
+@media (max-width: 670px) { 
+  .video-wrapper {
+    width: 100%; /* Full width */
+    display: flex;
+    /* grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr; 
+    grid-gap: 10px;  */
+  }
+  .item1 {
+    grid-row: 1; /* First row for item1 */
+    width: 100%; /* Full width for item1 */
+    height: 100%;
+    position: relative;
+  }
+  .itemContainer {
+    grid-row: 2 / span 2; /* Occupies second and third row */
+    display: grid;
+    grid-template-rows: 1fr 1fr; /* Two equal rows for item2 and item3 */
+    grid-gap: 10px; /* Add some space between items */
+  }
+  .item2, .item3 {
+    width: 100%; /* Full width for items */
+  }
+}
+
+
 </style>
