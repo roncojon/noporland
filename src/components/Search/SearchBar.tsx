@@ -85,7 +85,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
       if (newParams.toString() !== searchParams.toString()) {
         setIsUpdatingUrl(true); // Indicate we're about to update the URL
         setSearchParams(newParams);
-        window.history.pushState(null, '', '?' + newParams.toString());
+        window.history.replaceState(null, '', '?' + newParams.toString());
         setIsUpdatingUrl(false); // Reset after URL update
       }
     }
