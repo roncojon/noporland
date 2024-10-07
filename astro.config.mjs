@@ -28,11 +28,11 @@ const cstmPgs = async () => {
 
   // Return the final array of URLs
   return [
-    // 'https://www.noporland.me', // Static home page
-    // 'https://www.noporland.me/information/terms',
-    // 'https://www.noporland.me/information/privacy',
-    // 'https://www.noporland.me/information/2257',
-    ...allVideoKeys.map(key => `https://www.noporland.me${key}`),
+    // 'https://noporland.me', // Static home page
+    // 'https://noporland.me/information/terms',
+    // 'https://noporland.me/information/privacy',
+    // 'https://noporland.me/information/2257',
+    ...allVideoKeys.map(key => `https://noporland.me${key}`),
   ];
 };
 
@@ -46,6 +46,6 @@ export default defineConfig({
     react(),
     tailwind(),
   ],
-  site: 'https://www.noporland.me',
+  site: 'https://noporland.me',
   adapter: vercel(),
 });

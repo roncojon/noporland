@@ -56,10 +56,10 @@ export const fetchVideosData = async ({
             {
                 method: 'GET',
                 // headers: {
-                //     'Origin': 'https://www.noporland.me',
+                //     'Origin': 'https://noporland.me',
                 //     'Content-Type': 'application/json',
                 // },
-                // referrer: 'https://www.noporland.me'
+                // referrer: 'https://noporland.me'
                 // credentials: 'include', // if needed for authentication with cookies
             }
         );
