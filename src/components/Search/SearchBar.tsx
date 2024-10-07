@@ -44,7 +44,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
       if (
         (searchText || searchTags.length > 0 || page !== 1) && // Avoid resetting to empty values
         (searchText !== searchState.savedSearchTerm ||
-          searchTags.toString() !== selectedTags.toString() ||
+          searchTags.toString() !== searchState.savedSelectedTags.toString() ||
           page !== searchState.currentPage)
       ) {
         setSearchState({
@@ -63,8 +63,8 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
   const { data, videos, isLoading, refetch } = useVideoSearch({
     initialVideos,
     searchState,
-    searchTerm,
-    selectedTags,
+    // searchTerm,
+    // selectedTags,
   });
 
   // Update URL when search parameters change, but avoid infinite loop
@@ -77,7 +77,7 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
         newParams.set('searchText', searchState.savedSearchTerm);
       }
       if (selectedTags.length > 0) {
-        newParams.set('searchTags', selectedTags.join(','));
+        newParams.set('searchTags', searchState.savedSelectedTags.join(','));
       }
       newParams.set('page', searchState.currentPage.toString());
 
@@ -85,11 +85,11 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
       if (newParams.toString() !== searchParams.toString()) {
         setIsUpdatingUrl(true); // Indicate we're about to update the URL
         setSearchParams(newParams);
-        window.history.replaceState(null, '', '?' + newParams.toString());
+        window.history.pushState(null, '', '?' + newParams.toString());
         setIsUpdatingUrl(false); // Reset after URL update
       }
     }
-  }, [searchState, selectedTags, isClient, searchParams]);
+  }, [searchState, isClient, searchParams]);
 
   // Rest of the component logic (e.g., handling input changes, search, etc.)...
 

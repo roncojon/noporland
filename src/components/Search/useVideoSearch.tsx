@@ -5,7 +5,7 @@ import { fetchVideosData } from '../../services/awsServices';
 
 const elementsPerPage = 20;
 
-const useVideoSearch = ({initialVideos,searchState,searchTerm,selectedTags}) => {
+const useVideoSearch = ({initialVideos,searchState/* ,searchTerm,selectedTags */}) => {
   const [videos, setVideos] = useState<VideoAndThumbnailUrlType[] | undefined>(initialVideos?.videoFiles || []);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,7 +13,7 @@ const useVideoSearch = ({initialVideos,searchState,searchTerm,selectedTags}) => 
     const { data, isLoading: isLoadingQuery, isError, refetch } = useQuery({
         queryKey: ['videos', searchState], // Unique query key based on searchState and currentPage
         queryFn: async () => {
-          if (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) {
+          if (searchState.savedSearchTerm.length > 0 || searchState.savedSelectedTags.length > 0 || searchState.currentPage > 1) {
             const result = await fetchVideosData({
               bringTags: false,
               elementsPerPage,
