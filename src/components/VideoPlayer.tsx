@@ -84,7 +84,7 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
           console.log("On Play Event Triggered", e)
 
           // console.log('window.location',window.location)
-          console.log('window.location.href', window.location.href)
+          // console.log('window.location.href', window.location.href)
           function extractVideoKeyFromWindowLocation(url) {
             // Create a new URL object to easily extract the pathname
             const urlObj = new URL(url);
