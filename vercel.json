@@ -1,0 +1,40 @@
+{
+  "headers": [
+    {
+      "source": "/images/(.*)", 
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"  
+        }
+      ]
+    },
+    {
+      "source": "/css/(.*)",  
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",  
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    }
+  ]
+}
