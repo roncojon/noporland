@@ -1,33 +1,102 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import CardReact from '../CardReact';
 import styles from '../Card.module.css';
 import Loader from './Loader';
 import { CloseIcon } from './CloseIcon';
 import NoDataFound from './NoData';
-import { fetchVideosData, type FetchVideosDataType } from '../../services/awsServices';
-import type { VideoAndThumbnailUrlType } from '../../env';
+import { type FetchVideosDataType } from '../../services/awsServices';
 import Modal from '../Modal';
-// import RSSFeedReader from '../RSSFeedReader';
-
-const elementsPerPage = 20;
+import useVideoSearch from './useVideoSearch';
 
 const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType, tags: string[] | any }) => {
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Current search term
-  const [selectedTags, setSelectedTags] = useState<string[]>([]); // Current selected tags
-  // const [currentPage, setCurrentPage] = useState(1); // Track the current page number
-  const [searchState, setSearchState] = useState({
+  const [isClient, setIsClient] = useState(false);
+  const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+  const [urlProcessed, setUrlProcessed] = useState(false); // NEW: Track if URL params have been processed
+
+  // Initialize the state
+  const initialSearchState = {
     savedSearchTerm: '',
     savedSelectedTags: [] as string[],
-    currentPage: 1
+    currentPage: 1,
+  };
+
+  const [searchTerm, setSearchTerm] = useState<string>(initialSearchState.savedSearchTerm);
+  const [selectedTags, setSelectedTags] = useState<string[]>(initialSearchState.savedSelectedTags);
+  const [searchState, setSearchState] = useState(initialSearchState);
+  const [isUpdatingUrl, setIsUpdatingUrl] = useState(false); // Track URL updates
+
+  // Detect if we're on the client (to manage URL params)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsClient(true);
+      setSearchParams(new URLSearchParams(window.location.search));
+    }
+  }, []);
+
+  // Update the state with URL search params only ONCE when navigating back to the page
+  useEffect(() => {
+    if (isClient && searchParams && !urlProcessed) {
+      const searchText = searchParams.get('searchText');
+      const searchTags = searchParams.get('searchTags')?.split(',') || [];
+      const page = Number(searchParams.get('page')) || 1;
+
+      // Only update if the URL parameters have actual values and are different
+      if (
+        (searchText || searchTags.length > 0 || page !== 1) && // Avoid resetting to empty values
+        (searchText !== searchState.savedSearchTerm ||
+          searchTags.toString() !== selectedTags.toString() ||
+          page !== searchState.currentPage)
+      ) {
+        setSearchState({
+          savedSearchTerm: searchText || '',
+          savedSelectedTags: searchTags,
+          currentPage: page,
+        });
+        setSearchTerm(searchText || '');
+        setSelectedTags(searchTags);
+        setUrlProcessed(true); // Mark URL as processed to avoid re-triggering
+      }
+    }
+  }, [isClient, searchParams, urlProcessed]);
+
+  // Hook that fetches videos based on the state
+  const { data, videos, isLoading, refetch } = useVideoSearch({
+    initialVideos,
+    searchState,
+    searchTerm,
+    selectedTags,
   });
-  const [videos, setVideos] = useState<VideoAndThumbnailUrlType[] | undefined>(initialVideos?.videoFiles || []);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // const [totalPages, setTotalPages] = useState<number>(1); // Track the total pages returned by the backend
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false); // Dropdown visibility
-  const searchInputRef = useRef<HTMLInputElement>(null); // Ref for the search input
+  // Update URL when search parameters change, but avoid infinite loop
+  useEffect(() => {
+    if (isClient && searchParams) {
+      const newParams = new URLSearchParams();
+      
+      // Only set URL params if the values are not empty
+      if (searchState.savedSearchTerm) {
+        newParams.set('searchText', searchState.savedSearchTerm);
+      }
+      if (selectedTags.length > 0) {
+        newParams.set('searchTags', selectedTags.join(','));
+      }
+      newParams.set('page', searchState.currentPage.toString());
 
+      // Only update the URL if the params differ from the current URL
+      if (newParams.toString() !== searchParams.toString()) {
+        setIsUpdatingUrl(true); // Indicate we're about to update the URL
+        setSearchParams(newParams);
+        window.history.replaceState(null, '', '?' + newParams.toString());
+        setIsUpdatingUrl(false); // Reset after URL update
+      }
+    }
+  }, [searchState, selectedTags, isClient, searchParams]);
+
+  // Rest of the component logic (e.g., handling input changes, search, etc.)...
+
+
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false); // Dropdown visibility
+    const searchInputRef = useRef<HTMLInputElement>(null); // Ref for the search input
   // Handle the search input change
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -45,7 +114,6 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
     setIsDropdownOpen(false);
     searchInputRef.current?.blur(); // Remove focus from the search bar after clearing
   };
-
 
   // Toggle tag selection
   const toggleTagSelection = (tag: string, e: React.MouseEvent | React.KeyboardEvent) => {
@@ -113,42 +181,6 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
     setIsDropdownOpen(true); // Open dropdown
   };
 
-  const { data, isLoading: isLoadingQuery, isError, refetch } = useQuery({
-    queryKey: ['videos', searchState], // Unique query key based on searchState and currentPage
-    queryFn: async () => {
-      if (searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1) {
-        const result = await fetchVideosData({
-          bringTags: false,
-          elementsPerPage,
-          searchText: searchState.savedSearchTerm,
-          searchTags: searchState.savedSelectedTags,
-          page: searchState.currentPage, // Pass the continuation token to the query
-        });
-        return result;
-      }
-      else return initialVideos;
-    },
-    // keepPreviousData: true, // Keep previous data while fetching new data
-    // enabled: searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1, // Only fetch if there are filters or user paginates
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    staleTime: 600000, // Cache results for 10 minutes
-  });
-
-  useEffect(() => {
-    // if(searchTerm.length > 0 || selectedTags.length > 0 || searchState.currentPage > 1)
-    if (!isLoadingQuery && data) {
-      setIsLoading(false);
-      setVideos(data?.videoFiles);
-    }
-    else if (isLoadingQuery) {
-      setIsLoading(true);
-    }
-  }, [data, isLoadingQuery])
-
-  // const videos = data?.videoFiles || [];
-
   // Handle Previous and Next Buttons
   const handlePreviousPage = () => {
     if (searchState.currentPage > 1) {
@@ -165,16 +197,6 @@ const SearchBar = ({ initialVideos, tags }: { initialVideos: FetchVideosDataType
       currentPage: prev.currentPage + 1,
     }));
   };
-
-  // const [isHidingPornHubIcon, setIsHidingPornHubIcon] = useState(false);
-  //   const handleLoadIframe = () => {
-  //     // const porHubIcon = document.querySelector('.mgp_logo mgp_isLink');
-  //     // if (porHubIcon)
-  //     //   porHubIcon.remove();
-  //     setIsHidingPornHubIcon(true);
-  //   }
-
-
   const [showModal, setShowModal] = useState(false);
 
   // Show the modal as soon as the component mounts
