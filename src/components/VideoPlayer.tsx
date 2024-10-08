@@ -11,9 +11,10 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
   const videoRef = useRef(null);
   const [adTag, setAdTag] = useState("https://s.magsrv.com/v1/vast.php?idzone=5435190"); // Primary VAST tag
   const [isStyleBeforeAnimation, setIsStyleBeforeAnimation] = useState(true);
-  const [suggestions24, setSuggestions24] = useState(allVideoSuggestions(videoIndex).suggestions24);
+  // const [suggestions24, setSuggestions24] = useState(allVideoSuggestions(videoIndex).suggestions24);
+  const [suggestions12, setSuggestions12] = useState(allVideoSuggestions(videoIndex).suggestions12);
   // const [isPaused, setIsPaused] = useState(false);
-  const [isEnded, setIsEnded] = useState(false);
+  const [isEnded, setIsEnded] = useState(true);
 
   useEffect(() => {
     // Function to load the Fluid Player script dynamically
@@ -129,21 +130,33 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
             // If src is not found, return null or some error handling
             return null;
           }
+          try {
+            const currentVideoKeyFromWindowLocation = extractVideoKeyFromWindowLocation(window.location.href);
+            const currentVideoKeyInPlayer = extractVideoKeyFromActualVideo(e.target.innerHTML);
+            function nextVideoPageLink(currentVideoInPlayer: string) {
+              const videoKey = currentVideoInPlayer;
+              console.log('videoKeyvideoKey', videoKey)
+              // console.log('videoKeyvideoKeysuggestions12', suggestions12[0].title)
+              const index = suggestions12.findIndex((video) => { console.log('videoKeyvideoKeysuggestions12', video.title); return extractVideoKeyFromWindowLocation(video.sources[0].url) === videoKey });
+              console.log('indexxxxx', index)
+              const nextVideoTags = suggestions12.find(v => v.id === index.toString()).tags;
+              const videoUrl = `/videos/${encodeURI(videoKey)}?tags=${encodeURIComponent(JSON.stringify(nextVideoTags))}&index=${index}`;
+              return videoUrl;
+            }
 
-          const currentVideoKeyFromWindowLocation = extractVideoKeyFromWindowLocation(window.location.href);
-          const currentVideoKeyInPlayer = extractVideoKeyFromActualVideo(e.target.innerHTML);
-          function nextVideoPageLink(currentVideoInPlayer: string) {
-            const videoKey = currentVideoInPlayer;
-            const videoUrl = `/videos/${encodeURI(videoKey)}`;
-            return videoUrl;
+            console.log('currentVideoKeyInPlayer', currentVideoKeyInPlayer)
+            console.log('currentVideoKeyFromWindowLocation', currentVideoKeyFromWindowLocation)
+            console.log('nextVideoPageLink(currentVideoKeyInPlayer)', nextVideoPageLink(currentVideoKeyInPlayer))
+
+            if (currentVideoKeyFromWindowLocation !== currentVideoKeyInPlayer) {
+              player.pause();
+              // console.log('DIFFERENTTTSSS')
+              window.location.href = nextVideoPageLink(currentVideoKeyInPlayer);
+            }
+          } catch (error) {
+            console.log('errorWhenClickingVideoSuggestion', error)
           }
-          console.log('currentVideoKeyInPlayer', currentVideoKeyInPlayer)
-          console.log('currentVideoKeyFromWindowLocation', currentVideoKeyFromWindowLocation)
-          if (currentVideoKeyFromWindowLocation !== currentVideoKeyInPlayer) {
-            player.pause();
-            // console.log('DIFFERENTTTSSS')
-            window.location.href = nextVideoPageLink(currentVideoKeyInPlayer);
-          }
+
         })
       };
       document.body.appendChild(script);
@@ -186,14 +199,16 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
     };
   }, [adTag, videoUrl]); // Re-run the effect when adTag or videoUrl changes
 
+  // useEffect(() => {
+  //   if (!isEnded)
+  //     setIsStyleBeforeAnimation(true);
+  // }, [isEnded])
+
   useEffect(() => {
     if (!isEnded)
       setIsStyleBeforeAnimation(true);
-  }, [isEnded])
-
-  useEffect(() => {
     const progressBarDivv = document.querySelector('#reverse_progress_bar');
-    if (videoRef.current && isEnded && !progressBarDivv) {
+    if (videoRef.current && /* isEnded &&  */ !progressBarDivv) {
       const fluid_video_wrapper = document.querySelector('.fluid_video_wrapper');
       if (fluid_video_wrapper) {
         // skipOffsetElement.classList.add('z-[101]');
@@ -206,6 +221,25 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
   }, [isEnded])
 
   useEffect(() => {
+    function getRandomInt(max: number): number {
+      // Ensure max is a positive integer
+      max = Math.floor(Math.abs(max));
+
+      // Generate a random number between 0 and max (inclusive)
+      return Math.floor(Math.random() * (max + 1));
+    }
+
+    const goToNextVideo = setTimeout(() => {
+      if (videoRef.current && isEnded && !isStyleBeforeAnimation) {
+        const randomVidIndex = getRandomInt(12);
+        const nextVideoSrcUrl = suggestions12[randomVidIndex].sources[0].url;
+        const nextVideoTags = suggestions12[randomVidIndex].tags;
+        const index = suggestions12[randomVidIndex].id;
+        const currentVideoKey = nextVideoSrcUrl.split('MainVideos/').pop();
+        const nextVideoUrl = `/videos/${currentVideoKey}?tags=${encodeURIComponent(JSON.stringify(nextVideoTags))}&index=${index}`;
+        window.location.href = nextVideoUrl;
+      }
+    }, 45000);
     if (videoRef.current) {
       const progressBarDiv = document.querySelector('#reverse_progress_bar');
       if (progressBarDiv) {
@@ -213,6 +247,9 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
           }`;
       }
     }
+    return () => {
+      clearTimeout(goToNextVideo);
+    };
   }, [isStyleBeforeAnimation]);
 
   return (
