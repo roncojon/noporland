@@ -10,7 +10,10 @@ type VideoPlayerProps = {
 const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
   const videoRef = useRef(null);
   const [adTag, setAdTag] = useState("https://s.magsrv.com/v1/vast.php?idzone=5435190"); // Primary VAST tag
-
+  const [isStyleBeforeAnimation, setIsStyleBeforeAnimation] = useState(true);
+  const [suggestions24, setSuggestions24] = useState(allVideoSuggestions(videoIndex).suggestions24);
+  // const [isPaused, setIsPaused] = useState(false);
+  const [isEnded, setIsEnded] = useState(false);
 
   useEffect(() => {
     // Function to load the Fluid Player script dynamically
@@ -20,7 +23,7 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
       script.async = true; // Add async attribute to the script
       script.onload = () => {
 
-        const suggestions12 = allVideoSuggestions(videoIndex).suggestions12;
+        // const suggestions12 = allVideoSuggestions(videoIndex).suggestions12;
         // console.log('suggestions12',suggestions12)
         // Initialize Fluid Player with a fallback mechanism for VAST tag
         const player = window.fluidPlayer("example-player", {
@@ -67,6 +70,19 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
           }
         });
 
+        // Video end
+        player.on('ended', (e) => {
+          console.log("Video ended:", e);
+          // console.log("VideoPausedFromEnded:", isPaused);
+          setIsEnded(true);
+          if (e.isTrusted)
+            setIsStyleBeforeAnimation(false);
+        });
+        // Video end
+        // player.on('pause', (e) => {
+        //   console.log("VideoPaused:", e);
+        //   setIsPaused(true);
+        // });
         // Add error handling for VAST failure
         player.on('error', (error) => {
           console.error("VAST ad error:", error);
@@ -82,7 +98,8 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
 
         player.on('play', (e) => {
           console.log("On Play Event Triggered", e)
-
+          // setIsPaused(false);
+          setIsEnded(false);
           // console.log('window.location',window.location)
           // console.log('window.location.href', window.location.href)
           function extractVideoKeyFromWindowLocation(url) {
@@ -169,16 +186,47 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
     };
   }, [adTag, videoUrl]); // Re-run the effect when adTag or videoUrl changes
 
+  useEffect(() => {
+    if (!isEnded)
+      setIsStyleBeforeAnimation(true);
+  }, [isEnded])
+
+  useEffect(() => {
+    const progressBarDivv = document.querySelector('#reverse_progress_bar');
+    if (videoRef.current && isEnded && !progressBarDivv) {
+      const fluid_video_wrapper = document.querySelector('.fluid_video_wrapper');
+      if (fluid_video_wrapper) {
+        // skipOffsetElement.classList.add('z-[101]');
+        const progressBarDiv = document.createElement('div');
+        progressBarDiv.id = 'reverse_progress_bar';
+        progressBarDiv.className = `absolute top-0 z-[150] left-0 h-[3px] bg-red-600 transition-[width] duration-[45s] ease-linear w-full bg-transparent`;
+        fluid_video_wrapper.appendChild(progressBarDiv);
+      }
+    }
+  }, [isEnded])
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const progressBarDiv = document.querySelector('#reverse_progress_bar');
+      if (progressBarDiv) {
+        progressBarDiv.className = `absolute top-0 z-[150] left-0 h-[3px] bg-red-600 transition-[width] duration-[45s] ease-linear ${isStyleBeforeAnimation ? 'w-full bg-transparent' : 'w-0'
+          }`;
+      }
+    }
+  }, [isStyleBeforeAnimation]);
+
   return (
-    <video
-      id="example-player"  // Use a valid id that matches in fluidPlayer initialization
-      ref={videoRef}
-      className="w-full h-full bg-[#171313] rounded-lg aspect-[16/9]"
-      controls
-      preload="metadata"
-    >
-      <source src={videoUrl} type="video/mp4" />
-    </video>
+    <div className="relative w-full h-full aspect-[16/9]">
+      <video
+        id="example-player"
+        ref={videoRef}
+        className="w-full h-full bg-[#171313] rounded-lg  border-t-2 border-t-transparent"
+        controls
+        preload="metadata"
+      >
+        <source src={videoUrl} type="video/mp4" />
+      </video>
+    </div>
   );
 };
 
