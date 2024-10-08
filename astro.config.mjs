@@ -42,6 +42,9 @@ export default defineConfig({
   integrations: [
     sitemap({
       customPages: result,
+      changefreq: 'weekly',
+      priority: 0.8,
+      lastmod: new Date('2024-10-08'),
     }),
     react(),
     tailwind(),
