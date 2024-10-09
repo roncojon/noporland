@@ -35,7 +35,7 @@ const VideoPlayer = ({ videoUrl, videoIndex, videoTags, thumbnailUrl, lastMod }:
       "description": extractTitleFromCloudfrontUrlMainVideos(videoUrl) ?? '',// video.description,
       "thumbnailUrl": encodeURI(thumbnailUrl) ?? '',
       "uploadDate": lastMod ?? '',
-      "duration": `PT${Math.floor(duration / 60)}M${Math.floor(duration % 60)}S` ?? '', // e.g., "PT1H30M"
+      "duration": `PT${Math.floor(duration / 60)}M${Math.floor(duration % 60)}S`, // e.g., "PT1H30M"
       "contentUrl": encodeURI(videoUrl) ?? '',
       // "embedUrl": video.embedUrl,
       // "interactionStatistic": {
