@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { allVideoSuggestions } from "../utils/getVideoSuggestions";
+import { extractTitleFromCloudfrontUrlMainVideos, extractVideoKeyFromActualVideo, extractVideoKeyFromWindowLocation } from "../utils/globalHelpers";
 
 // const aLotOfVids = ;
 type VideoPlayerProps = {
   videoUrl: string;
   videoIndex: number;
+  videoTags: string[];
+  thumbnailUrl: string;
+  lastMod:string
 }
 
-const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoUrl, videoIndex, videoTags, thumbnailUrl, lastMod }: VideoPlayerProps) => {
   const videoRef = useRef(null);
   const [adTag, setAdTag] = useState("https://s.magsrv.com/v1/vast.php?idzone=5435190"); // Primary VAST tag
   const [isStyleBeforeAnimation, setIsStyleBeforeAnimation] = useState(true);
@@ -15,6 +19,49 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
   const [suggestions12, setSuggestions12] = useState(allVideoSuggestions(videoIndex).suggestions12);
   // const [isPaused, setIsPaused] = useState(false);
   const [isEnded, setIsEnded] = useState(true);
+
+  const [duration, setDuration] = useState(null);
+  // This function will be called when the video's metadata is loaded
+  const handleLoadedMetadata = (event) => {
+    const videoElement = event.target;
+    setDuration(videoElement.duration); // Get duration in seconds
+  };
+  useEffect(() => {
+
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": extractTitleFromCloudfrontUrlMainVideos(videoUrl)?? '',// extractVideoKeyFromActualVideo(encodeURI(videoUrl)),
+      "description": extractTitleFromCloudfrontUrlMainVideos(videoUrl) ?? '',// video.description,
+      "thumbnailUrl": encodeURI(thumbnailUrl) ?? '',
+      "uploadDate": lastMod ?? '',
+      "duration": `PT${Math.floor(duration / 60)}M${Math.floor(duration % 60)}S` ?? '', // e.g., "PT1H30M"
+      "contentUrl": encodeURI(videoUrl) ?? '',
+      // "embedUrl": video.embedUrl,
+      // "interactionStatistic": {
+      //   "@type": "InteractionCounter",
+      //   "interactionType": { "@type": "WatchAction" },
+      //   "userInteractionCount": video.views
+      // },
+      "keywords": videoTags.join(", ") ?? '' // Tags as keywords
+    };
+    const script = document.createElement('script');
+    if (duration) {
+      // Create a script element to add structured data
+      script.id = "structureddata"
+      script.type = 'application/ld+json';
+      script.innerHTML = JSON.stringify(structuredData);
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      // document.head.removeChild(script); // Clean up script on unmount
+      const scriptInTheDom = document.getElementById('structureddata');
+      if (scriptInTheDom) {
+        scriptInTheDom.remove();
+      }
+    };
+  }, [duration]);
 
   useEffect(() => {
     // Function to load the Fluid Player script dynamically
@@ -103,33 +150,7 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
           setIsEnded(false);
           // console.log('window.location',window.location)
           // console.log('window.location.href', window.location.href)
-          function extractVideoKeyFromWindowLocation(url) {
-            // Create a new URL object to easily extract the pathname
-            const urlObj = new URL(url);
-
-            // Get the pathname part of the URL and split it by "/" to get the last part (the videoKey)
-            const encodedVideoKey = urlObj.pathname.split('/').pop();
-
-            // Decode the videoKey to return it in unencoded format
-            return decodeURI(encodedVideoKey);
-          }
-          function extractVideoKeyFromActualVideo(sourceTag: string) {
-            // Use a regular expression to extract the src attribute value
-            const srcMatch = sourceTag.match(/src="([^"]+)"/);
-
-            if (srcMatch && srcMatch[1]) {
-              const url = srcMatch[1];
-
-              // Extract the videoKey (file name) from the URL
-              const videoKey = url.split('/').pop();
-
-              // Return the unencoded videoKey
-              return decodeURI(videoKey);// videoKey;
-            }
-
-            // If src is not found, return null or some error handling
-            return null;
-          }
+        
           try {
             const currentVideoKeyFromWindowLocation = extractVideoKeyFromWindowLocation(window.location.href);
             const currentVideoKeyInPlayer = extractVideoKeyFromActualVideo(e.target.innerHTML);
@@ -260,6 +281,7 @@ const VideoPlayer = ({ videoUrl, videoIndex }: VideoPlayerProps) => {
         className="w-full h-full bg-[#171313] rounded-lg  border-t-2 border-t-transparent"
         controls
         preload="metadata"
+        onLoadedMetadata={handleLoadedMetadata}
       >
         <source src={videoUrl} type="video/mp4" />
       </video>

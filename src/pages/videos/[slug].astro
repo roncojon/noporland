@@ -3,6 +3,7 @@ import ModalWrapper from "../../components/ModalWrapper";
 import VideoPlayer from "../../components/VideoPlayer";
 import Layout from "../../layouts/Layout.astro";
 import { fetchVideosData } from "../../services/awsServices";
+import { extractVideoKeyFromWindowLocation } from "../../utils/globalHelpers";
 
 // Enable SSR if needed
 export const prerender = false; 
@@ -13,12 +14,21 @@ const { slug } = Astro.params;
 // Fetch the query parameters
 const searchParams = new URL(Astro.request.url).searchParams;
 const videoIndex = searchParams.get('index') ? Number(searchParams.get('index')) : 0;
-let tags = searchParams.get('tags') ? JSON.parse(searchParams.get('tags')) : await fetchVideosData({
+
+const videoDataFromBackend = await fetchVideosData({
           bringTags: false,
           elementsPerPage:1,
           searchText: slug,
           page: 1, 
-}).then(r=>r?.videoFiles[0]?.tags);
+}).then(r=>r?.videoFiles[0]);
+const lastMod = videoDataFromBackend.lastModified;
+const thumbnailUrl = videoDataFromBackend.thumbnailUrl;
+let tags = searchParams.get('tags') ? JSON.parse(searchParams.get('tags')) : videoDataFromBackend.tags /* await fetchVideosData({
+          bringTags: false,
+          elementsPerPage:1,
+          searchText: slug,
+          page: 1, 
+}).then(r=>r?.videoFiles[0]?.tags); */
 
 // Map the slug to the external CloudFront URL
 const videoUrl = `https://d1a9sy9txb1eh6.cloudfront.net/MainVideos/${slug}`;
@@ -29,10 +39,15 @@ const videoData = {
   description: "" /* `This is the description for the video: ${slug}` */,
   videoUrl,
   tags, // Adding the tags to videoData
+  lastMod,
 };
 
+// Fetch the current page URL
+const currentUrl = Astro.request.url;
+const currentTitlePrettyfied = extractVideoKeyFromWindowLocation(currentUrl);
+
 ---
-<Layout title={videoData.title}>
+<Layout  title={currentTitlePrettyfied+ ' | NoporLand'} videoDescription={`Watch ${currentTitlePrettyfied} for free on NoporLand. Enjoy our exclusive collection of uncensored HD hentai videos and more.`} currentUrl={currentUrl}>
   <!-- This was the a bellow -->
   <!--  btn btn-ghost     btn btn-square -->
       <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
@@ -46,7 +61,7 @@ const videoData = {
         </a>
         <h1 
         title={videoData.title}
-        class="ml-3 overflow-hidden text-ellipsis" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-height: 3rem; line-height: 1.5rem;">
+        class="ml-3 overflow-hidden text-ellipsis text-[1.2rem]" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-height: 3rem; line-height: 1.5rem;">
           NoporLand / {videoData.title}
         </h1>
       </div>
@@ -56,7 +71,7 @@ const videoData = {
     <!-- Main Video Display -->
     <div class="video-wrapper">
         <div id="item_01" class=" item1">
-         <VideoPlayer client:idle videoUrl={videoData.videoUrl} videoIndex={videoIndex}/> <!-- client:only="react" -->
+         <VideoPlayer client:idle videoUrl={videoData.videoUrl} videoIndex={videoIndex} videoTags={videoData.tags} lastMod={lastMod} thumbnailUrl={thumbnailUrl}/> <!-- client:only="react" -->
         </div>
         <div class=" itemContainer">
          <div id="item_02" class=" item2">
@@ -84,12 +99,12 @@ const videoData = {
 
     <!-- Video Details -->
     <div class="video-info">
-      <h2>{videoData.title}</h2>
-      <p>{videoData.description}</p>
+      <!-- <h2>{videoData.title}</h2>
+      <p>{videoData.description}</p> -->
       <!-- Display the tags if available -->
       <!-- <ul>
         {videoData?.tags?.map(tag => <li>{tag || ""}</li>)} -->
-
+        <h2 title={`Tags for ${videoData?.title?.split('.mp4')[0]}`}>Tags for {videoData?.title?.split('.mp4')[0]}: </h2>
         <div class="flex flex-wrap my-2 w-full">
           {videoData?.tags?.sort((a, b) => a.localeCompare(b))?.map((tag) => (
             <div
@@ -157,7 +172,7 @@ const videoData = {
   }
 
   h2 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: white;
     margin: 0 0 10px 0;
   }

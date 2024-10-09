@@ -6,7 +6,8 @@ export type VideoAndThumbnailUrlType = {
   videoUrl: string,
   thumbnailUrl: string,
   previewUrl: string,
-  tags: string[]
+  tags: string[],
+  lastModified?: string
 };
 
 declare global {
