@@ -35,29 +35,33 @@ export const useVideoUpload = () => {
 
   const uploadVideo = async () => {
     if (!videoFile) return alert('Please select a video to upload.');
-
-    // Request pre-signed URL from backend
-    const response = await fetch('https://d41s0q1zda.execute-api.us-west-1.amazonaws.com/prod/get-presigned-url', {
+  
+    // Step 1: Request presigned URL from your Astro API route
+    const response = await fetch('/api/get-presigned-url', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fileName: videoFile.name, fileType: videoFile.type }),
     });
-
-    const { uploadUrl } = await response.json();
-
-    // Upload video directly to S3
+  
+    const { uploadUrl, videoKey } = await response.json();
+  
+    // Step 2: Upload video directly to S3 using the presigned URL
     const uploadResponse = await fetch(uploadUrl, {
       method: 'PUT',
       body: videoFile,
-      headers: { 'Content-Type': videoFile.type },
+      headers: {
+        'Content-Type': videoFile.type,
+      },
     });
-
+  
     if (uploadResponse.ok) {
       alert('Video uploaded successfully!');
+      // Handle video key as needed
     } else {
       alert('Failed to upload video.');
     }
   };
+  
 
   return {
     videoFile,
