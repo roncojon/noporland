@@ -11,6 +11,7 @@ const initialVideosRenderedInServer = await fetchVideosData({
   page: 1,
 });
 
+console.log('initialVideosRenderedInServer',initialVideosRenderedInServer);
 const tags: string[] | any = initialVideosRenderedInServer?.tags;
 ---
 

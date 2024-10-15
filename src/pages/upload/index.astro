@@ -1,9 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import UploadVideo from "../../components/Upload/UploadVideo";
+import UploadVideoContainer from "../../components/Upload/UploadVideoContainer";
 
 ---
 
 <Layout title="Upload">
-    <UploadVideo client:load/>
+    <UploadVideoContainer client:load/>
+    <!-- <UploadVideo client:load/> -->
 </Layout>
